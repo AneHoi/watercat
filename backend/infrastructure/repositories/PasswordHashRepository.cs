@@ -1,20 +1,41 @@
 ﻿using System.Data.SqlTypes;
+using Dapper;
 using infrastructure.Models;
+using Npgsql;
 
 namespace infrastructure;
 
 //TODO fix to postgress
 public class PasswordHashRepository
 {
-    private readonly string _connectionString;
     
-    public PasswordHashRepository(string connectionString)
+    private readonly NpgsqlDataSource _dataSource;
+
+    public PasswordHashRepository(NpgsqlDataSource dataSource)
     {
-        _connectionString = connectionString;
+        _dataSource = dataSource;
+    }
+
+    //TODO from an old project 
+    public PasswordHash GetByEmail(string email)
+    {
+        const string sql = $@"
+            SELECT 
+                user_id as {nameof(PasswordHash.Id)},
+                hash as {nameof(PasswordHash.Hash)},
+                salt as {nameof(PasswordHash.Salt)},
+                algorithm as {nameof(PasswordHash.Algorithm)}
+            FROM watercat.password_hash
+            JOIN watercat.users ON watercat.password_hash.user_id = users.id
+            WHERE email = @email;
+        ";
+        using var connection = _dataSource.OpenConnection();
+        return connection.QuerySingle<PasswordHash>(sql, new { email });
     }
     
     public bool Create(PasswordHash password)
     {
+        
         using var connection = new MySqlConnection(_connectionString);
         try
         {

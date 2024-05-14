@@ -39,7 +39,7 @@ public static class ExtensionMethods
         var eventType = dto.eventType.EndsWith("Dto", StringComparison.OrdinalIgnoreCase)
             ? dto.eventType.Substring(0, dto.eventType.Length - 3)
             : dto.eventType;
-
+    
         var handlerType = types.FirstOrDefault(t => t.Name.Equals(eventType, StringComparison.OrdinalIgnoreCase) ||
                                                     t.Name.Equals(eventType + "Dto",
                                                         StringComparison.OrdinalIgnoreCase));
