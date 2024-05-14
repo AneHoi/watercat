@@ -1,44 +1,87 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using System.Security.Authentication;
+using api.mqttEventListeners;
+using api.WebSocket;
+using Fleck;
+using infrastructure;
+using lib;
+using service.services;
+using service.services.notificationServices;
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public static class Startup
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    public static void Main(string[] args)
+    {
+        var app = Start(args);
+        app.Run();
+    }
 
-app.UseHttpsRedirection();
+    public static WebApplication Start(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+        builder.Services.AddSingleton<SmtpRepository>();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+        //saves connection string
+        //gets connection string to db
+        builder.Services.AddSingleton(provider => Utilities.ProperlyFormattedConnectionString);
 
-app.Run();
+        builder.Services.AddSingleton(provider => new PasswordHashRepository(provider.GetRequiredService<string>()));
+        builder.Services.AddSingleton(provider => new UserRepository(provider.GetRequiredService<string>()));
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        builder.Services.AddSingleton<AuthService>();
+        builder.Services.AddSingleton<TokenService>();
+        builder.Services.AddSingleton<NotificationService>();
+
+        builder.Services.AddSingleton<DeviceReadingsService>();
+        builder.Services.AddSingleton<MqttClientSubscriber>();
+
+        // Add services to the container.
+        var services = builder.FindAndInjectClientEventHandlers(Assembly.GetExecutingAssembly());
+
+
+        builder.WebHost.UseUrls("http://*:9999");
+
+        var app = builder.Build();
+
+        var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+        var server = new WebSocketServer("ws://0.0.0.0:" + port);
+        server.RestartAfterListenError = true;
+
+        server.Start(socket =>
+        {
+            socket.OnOpen = () => StateService.AddClient(socket.ConnectionInfo.Id, socket);
+            socket.OnClose = () => StateService.RemoveClient(socket.ConnectionInfo.Id);
+            socket.OnMessage = async message =>
+            {
+                try
+                {
+                    await app.InvokeClientEventHandler(services, socket, message);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    //error handler
+                    //todo should have a logger that logs the error so we can se it when deployed 
+                    if (app.Environment.IsProduction() && (e is ValidationException || e is AuthenticationException))
+                    {
+                        socket.SendDto(new ServerSendsErrorMessageToClient()
+                        {
+                            errorMessage = "Something went wrong",
+                            receivedMessage = message
+                        });
+                    }
+                    else
+                    {
+                        socket.SendDto(new ServerSendsErrorMessageToClient
+                            { errorMessage = e.Message, receivedMessage = message });
+                    }
+                }
+            };
+        });
+        app.Services.GetService<MqttClientSubscriber>()?.CommunicateWithBroker();
+        return app;
+    }
 }
