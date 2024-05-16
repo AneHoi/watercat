@@ -11,7 +11,7 @@ public class EnvironmentSetup
 public enum EnvVarKeys
 {
     JWT_KEY,
-    dbconn,
+    pgconn,
     MailPassword,
     MqttToken
 }

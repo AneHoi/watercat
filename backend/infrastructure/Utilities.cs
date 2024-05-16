@@ -1,7 +1,9 @@
-﻿namespace infrastructure;
+﻿using api.helpers;
+
+namespace infrastructure;
 public class Utilities
 {
-    private static readonly Uri Uri = new Uri(Environment.GetEnvironmentVariable("pgconn")!);
+    private static readonly Uri Uri = new Uri(Environment.GetEnvironmentVariable(EnvVarKeys.pgconn.ToString())!);
 
     public static readonly string
         ProperlyFormattedConnectionString = string.Format(

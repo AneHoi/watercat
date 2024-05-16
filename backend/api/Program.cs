@@ -28,12 +28,12 @@ public static class Startup
 
         //saves connection string
         //gets connection string to db
-        builder.Services.AddSingleton(provider => Utilities.ProperlyFormattedConnectionString);
+        builder.Services.AddNpgsqlDataSource(Utilities.ProperlyFormattedConnectionString);
 
-        builder.Services.AddSingleton(provider => new PasswordHashRepository(provider.GetRequiredService<string>()));
-        builder.Services.AddSingleton(provider => new UserRepository(provider.GetRequiredService<string>()));
+        builder.Services.AddScoped<PasswordHashRepository>();
+        builder.Services.AddScoped<UserRepository>();
 
-        builder.Services.AddSingleton<AuthService>();
+        builder.Services.AddScoped<AuthService>();
         builder.Services.AddSingleton<TokenService>();
         builder.Services.AddSingleton<NotificationService>();
 

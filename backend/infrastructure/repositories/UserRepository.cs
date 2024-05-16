@@ -1,41 +1,43 @@
 ﻿using System.Data.SqlTypes;
 using Dapper;
 using infrastructure.Models;
-using MySqlConnector;
+using Npgsql;
 
 namespace infrastructure;
 
 //TODO fix to postgress
 public class UserRepository
 {
-    private readonly string _connectionString;
+    private readonly NpgsqlDataSource _dataSource;
 
-    public UserRepository(string connectionString)
+    public UserRepository(NpgsqlDataSource dataSource)
     {
-        _connectionString = connectionString;
+        _dataSource = dataSource;
     }
-    
+
     public EndUser Create(UserRegisterDto dto)
     {
-        using var connection = new MySqlConnection(_connectionString);
         try
         {
-            connection.Open();
-            
-            // Opret brugeren i User-tabellen
-            string insertUserQuery = "INSERT INTO User (Email) VALUES (@Email); SELECT LAST_INSERT_ID();";
+            using var connection = _dataSource.OpenConnection();
+            // create user in User-tabel
+            string insertUserQuery = "INSERT INTO Users (Email) VALUES (@Email);" +
+                                     "SELECT id FROM Users WHERE email = @Email;";
             int userId = connection.ExecuteScalar<int>(insertUserQuery, new { Email = dto.Email });
 
             // Opret brugeroplysninger i UserInformation-tabellen
-            string insertUserInfoQuery = "INSERT INTO UserInformation (UserId, FirstName, LastName) VALUES (@UserId, @FirstName, @LastName);";
-            connection.Execute(insertUserInfoQuery, new { UserId = userId, FirstName = dto.FirstName, LastName = dto.LastName });
+            string insertUserInfoQuery =
+                "INSERT INTO UserInformation (UserId, FirstName, LastName) VALUES (@UserId, @FirstName, @LastName);";
+            connection.Execute(insertUserInfoQuery,
+                new { UserId = userId, FirstName = dto.FirstName, LastName = dto.LastName });
 
             // Opret kontaktoplysninger i ContactInformation-tabellen
-            string insertContactInfoQuery = "INSERT INTO ContactInformation (UserId, CountryCode, Number) VALUES (@UserId, @CountryCode, @Number);";
-            connection.Execute(insertContactInfoQuery, new { UserId = userId, CountryCode = dto.CountryCode, Number = dto.Phone });
+            string insertContactInfoQuery =
+                "INSERT INTO ContactInformation (UserId, CountryCode, Number) VALUES (@UserId, @CountryCode, @Number);";
+            connection.Execute(insertContactInfoQuery,
+                new { UserId = userId, CountryCode = dto.CountryCode, Number = dto.Phone });
 
-            // Returner EndUser-objektet
-            //todo should set isBanned as false when added on enduser (when isBanned is added to user object)
+            // Returns EndUser-object
             return new EndUser
             {
                 Id = userId,
@@ -50,22 +52,21 @@ public class UserRepository
 
     public EndUser GetUserByEmail(string requestEmail)
     {
-        using var connection = new MySqlConnection(_connectionString);
         try
         {
-            connection.Open();
+            using var connection = _dataSource.OpenConnection();
+
             // Define the query using joins to fetch all information related to the user
             string query = @"
             SELECT u.Id, u.Email, ui.FirstName, ui.LastName, ci.CountryCode, ci.Number
-            FROM User u
+            FROM Users u
             LEFT JOIN UserInformation ui ON u.Id = ui.UserId
             LEFT JOIN ContactInformation ci ON u.Id = ci.UserId
-            LEFT JOIN UserStatus us ON u.Id = us.UserId
             WHERE u.Email = @Email";
 
             // Execute the query using Dapper and retrieve the user information
             var user = connection.QueryFirstOrDefault<EndUser>(query, new { Email = requestEmail });
-            
+
             return user;
         }
         catch (Exception ex)
@@ -74,21 +75,20 @@ public class UserRepository
             throw new SqlTypeException("Failed to retrieve user by email", ex);
         }
     }
-    
+
     public bool DoesUserExists(string dtoEmail)
-    {        
-        
-        using var connection = new MySqlConnection(_connectionString);
+    {
+        using var connection = _dataSource.OpenConnection();
+
         try
         {
             connection.Open();
-            string query = "SELECT COUNT(*) FROM User WHERE Email = @Email";
-            
+            string query = "SELECT COUNT(*) FROM Users WHERE Email = @Email";
+
             int count = connection.ExecuteScalar<int>(query, new { Email = dtoEmail });
-            
+
             // returns true if user exists
             return count > 0;
-            
         }
         catch (Exception ex)
         {
@@ -98,17 +98,16 @@ public class UserRepository
 
     public EndUser GetUserById(int userId)
     {
-        using var connection = new MySqlConnection(_connectionString);
+        using var connection = _dataSource.OpenConnection();
         try
         {
             connection.Open();
             // Definér forespørgslen ved hjælp af joins til at hente alle oplysninger relateret til brugeren
             string query = @"
         SELECT u.Id, u.Email, ui.FirstName, ui.LastName, ci.CountryCode, ci.Number
-        FROM User u
+        FROM Users u
         LEFT JOIN UserInformation ui ON u.Id = ui.UserId
         LEFT JOIN ContactInformation ci ON u.Id = ci.UserId
-        LEFT JOIN UserStatus us ON u.Id = us.UserId
         WHERE u.Id = @UserId";
 
             // Udfør forespørgslen ved hjælp af Dapper og hent brugeroplysningerne
@@ -125,7 +124,8 @@ public class UserRepository
 
     public UserNameInformationDto changeUserName(int id, string firstName, string lastName)
     {
-        using var connection = new MySqlConnection(_connectionString);
+        using var connection = _dataSource.OpenConnection();
+
         try
         {
             connection.Open();
@@ -152,7 +152,8 @@ public class UserRepository
 
     public string changePhoneNumber(int userId, string phoneNumber)
     {
-        using var connection = new MySqlConnection(_connectionString);
+        using var connection = _dataSource.OpenConnection();
+
         try
         {
             connection.Open();
@@ -179,16 +180,17 @@ public class UserRepository
 
     public string changeEmail(int userId, string oldEmail, string newEmail)
     {
-        using var connection = new MySqlConnection(_connectionString);
+        using var connection = _dataSource.OpenConnection();
+
         try
         {
             connection.Open();
             string query = @"
-                UPDATE User 
+                UPDATE Users 
                 SET Email = @newEmail 
                 WHERE Id = @userId AND Email =@oldEmail;
                 SELECT Email
-                FROM User
+                FROM Users
                 WHERE Id = @userId;
             ";
             string updatedEmail = connection.QueryFirst<string>(query, new

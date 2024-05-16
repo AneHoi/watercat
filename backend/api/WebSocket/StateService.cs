@@ -45,6 +45,7 @@ public static class StateService
 
     public static void AddClient(Guid clientId, IWebSocketConnection connection)
     {
+        Console.WriteLine("joined");
         _clients.TryAdd(clientId, new WebSocketMetaData(connection));
     }
     

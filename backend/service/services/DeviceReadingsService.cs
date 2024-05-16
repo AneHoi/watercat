@@ -13,6 +13,8 @@ public class DeviceReadingsService
     public void CreateReadings(DeviceData deviceReadingsDto)
     {
         var deviceId = deviceReadingsDto.DeviceId;
+        //TODO remove
+        Console.WriteLine("recieved");
 
         if (deviceReadingsDto.Data.Humidities.Any())
         {

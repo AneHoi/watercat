@@ -20,4 +20,10 @@
     <ProjectReference Include="..\service\service.csproj" />
   </ItemGroup>
 
+
+
+  <ItemGroup>
+    <Folder Include="clientEventhandlers\" />
+  </ItemGroup>
+
 </Project>

@@ -17,7 +17,9 @@ public class SmtpRepository
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
             client.EnableSsl = true;
-            client.Credentials = new NetworkCredential("climatenoti@GMAIL.COM", Environment.GetEnvironmentVariable(EnvVarKeys.MailPassword.ToString()));
+            //TODO fix to env var
+            //client.Credentials = new NetworkCredential("climatenoti@GMAIL.COM", Environment.GetEnvironmentVariable(EnvVarKeys.MailPassword.ToString()));
+            client.Credentials = new NetworkCredential("climatenoti@GMAIL.COM", "hjkl vbnm rtyu");
 
             using (var message = new MailMessage(
                        from: new MailAddress("climatenoti@GMAIL.COM", "Your Climate"),

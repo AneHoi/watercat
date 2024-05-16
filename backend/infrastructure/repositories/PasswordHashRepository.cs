@@ -8,42 +8,28 @@ namespace infrastructure;
 //TODO fix to postgress
 public class PasswordHashRepository
 {
-    
     private readonly NpgsqlDataSource _dataSource;
 
     public PasswordHashRepository(NpgsqlDataSource dataSource)
     {
         _dataSource = dataSource;
     }
-
-    //TODO from an old project 
-    public PasswordHash GetByEmail(string email)
-    {
-        const string sql = $@"
-            SELECT 
-                user_id as {nameof(PasswordHash.Id)},
-                hash as {nameof(PasswordHash.Hash)},
-                salt as {nameof(PasswordHash.Salt)},
-                algorithm as {nameof(PasswordHash.Algorithm)}
-            FROM watercat.password_hash
-            JOIN watercat.users ON watercat.password_hash.user_id = users.id
-            WHERE email = @email;
-        ";
-        using var connection = _dataSource.OpenConnection();
-        return connection.QuerySingle<PasswordHash>(sql, new { email });
-    }
-    
     public bool Create(PasswordHash password)
     {
-        
-        using var connection = new MySqlConnection(_connectionString);
+        using var connection = _dataSource.OpenConnection();
+
         try
         {
             connection.Open();
 
-            string insertQuery = "INSERT INTO PasswordHash (UserId, Hash, Salt, Algorithm) VALUES (@UserId, @Hash, @Salt, @Algorithm)";
-            
-            connection.Execute(insertQuery, new { UserId = password.Id, Hash = password.Hash, Salt = password.Salt, Algorithm = password.Algorithm });
+            string insertQuery =
+                "INSERT INTO PasswordHash (UserId, Hash, Salt, Algorithm) VALUES (@UserId, @Hash, @Salt, @Algorithm)";
+
+            connection.Execute(insertQuery,
+                new
+                {
+                    UserId = password.Id, Hash = password.Hash, Salt = password.Salt, Algorithm = password.Algorithm
+                });
 
             return true;
         }
@@ -52,10 +38,10 @@ public class PasswordHashRepository
             throw new SqlTypeException("Failed to save PasswordHash", ex);
         }
     }
-    
+
     public PasswordHash GetPasswordHashById(int userId)
     {
-        using var connection = new MySqlConnection(_connectionString);
+        using var connection = _dataSource.OpenConnection();
         try
         {
             connection.Open();
@@ -67,7 +53,7 @@ public class PasswordHashRepository
 
             // Execute the query using Dapper and retrieve the user information
             var pwHash = connection.QueryFirstOrDefault<PasswordHash>(query, new { UserId = userId });
-            
+
             return pwHash;
         }
         catch (Exception ex)
@@ -76,28 +62,29 @@ public class PasswordHashRepository
             throw new SqlTypeException("Failed to retrieve password hash by email", ex);
         }
     }
-    
+
     // Method to test the database connection
     //todo should be deleted when other ways of testing is done
     public bool TestConnection()
     {
-        using var connection = new MySqlConnection(_connectionString);
+        using var connection = _dataSource.OpenConnection();
+
         try
         {
             connection.Open();
-            
+
             return true; // Connection successful
         }
         catch (Exception e)
         {
-         
             return false; // Connection failed
         }
     }
 
     public bool ReplacePassword(int userId, PasswordHash userPasswordInfo)
     {
-        using (var connection = new MySqlConnection(_connectionString))
+        using var connection = _dataSource.OpenConnection();
+
         {
             try
             {
