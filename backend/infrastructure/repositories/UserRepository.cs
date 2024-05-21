@@ -14,6 +14,54 @@ public class UserRepository
     {
         _dataSource = dataSource;
     }
+    public void TestDatabaseConnection()
+    {
+        var connectionString = Utilities.ProperlyFormattedConnectionString;
+        try
+        {
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Connection to database succeeded!");
+                var query = "SELECT * FROM users";
+                var result = connection.ExecuteScalar(query);
+                Console.WriteLine("Test query executed successfully: " + result);
+
+                Console.WriteLine("Test query executed successfully: " + result);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Database connection failed: {ex.Message}\n{ex.StackTrace}");
+        }
+    }
+
+    public IEnumerable<Emailform>GetUsers()
+    {
+        try
+        {
+            // Define the query using joins to fetch all information related to the user
+            string query = @"
+            SELECT *
+            FROM Users 
+            ";
+
+            using (var connection = _dataSource.OpenConnection())
+            {
+                var user = connection.Query<Emailform>(query);
+                return user;
+            }
+            
+            // Execute the query using Dapper and retrieve the user information
+            
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions, maybe log them
+            throw new SqlTypeException("Failed to retrieve users", ex);
+        }
+    }
+
 
     public EndUser Create(UserRegisterDto dto)
     {
@@ -54,20 +102,20 @@ public class UserRepository
     {
         try
         {
-            using var connection = _dataSource.OpenConnection();
-
             // Define the query using joins to fetch all information related to the user
             string query = @"
-            SELECT u.Id, u.Email, ui.FirstName, ui.LastName, ci.CountryCode, ci.Number
-            FROM Users u
-            LEFT JOIN UserInformation ui ON u.Id = ui.UserId
-            LEFT JOIN ContactInformation ci ON u.Id = ci.UserId
-            WHERE u.Email = @Email";
+            SELECT Email
+            FROM Users 
+            WHERE Email = @Email";
 
+            using (var connection = _dataSource.OpenConnection())
+            {
+                var user = connection.QueryFirstOrDefault<Emailform>(query, new { Email = requestEmail });
+                return null;
+            }
+            
             // Execute the query using Dapper and retrieve the user information
-            var user = connection.QueryFirstOrDefault<EndUser>(query, new { Email = requestEmail });
-
-            return user;
+            
         }
         catch (Exception ex)
         {
@@ -205,4 +253,9 @@ public class UserRepository
             throw new SqlTypeException("Failed to update the email", e);
         }
     }
+}
+
+public class Emailform
+{
+    public string email { get; set; }
 }

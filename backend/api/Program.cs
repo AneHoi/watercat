@@ -1,16 +1,17 @@
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Security.Authentication;
+using api.helpers;
 using api.mqttEventListeners;
+using api.serverEventModels;
 using api.WebSocket;
+using Dapper;
 using Fleck;
 using infrastructure;
 using lib;
+using Npgsql;
 using service.services;
 using service.services.notificationServices;
-using api.helpers;
-using api.serverEventModels;
-
 
 public static class Startup
 {
@@ -30,10 +31,14 @@ public static class Startup
         //gets connection string to db
         builder.Services.AddNpgsqlDataSource(Utilities.ProperlyFormattedConnectionString);
 
-        builder.Services.AddScoped<PasswordHashRepository>();
-        builder.Services.AddScoped<UserRepository>();
+        builder.Services.AddSingleton(provider => Utilities.ProperlyFormattedConnectionString);
+        //builder.Services.AddSingleton(provider => new PasswordHashRepository(provider.GetService<NpgsqlDataSource>()));
+        //builder.Services.AddSingleton(provider => new UserRepository(provider.GetService<NpgsqlDataSource>()));
+        
+        builder.Services.AddSingleton<PasswordHashRepository>();
+        builder.Services.AddSingleton<UserRepository>();
 
-        builder.Services.AddScoped<AuthService>();
+        builder.Services.AddSingleton<AuthService>();
         builder.Services.AddSingleton<TokenService>();
         builder.Services.AddSingleton<NotificationService>();
 
@@ -84,6 +89,9 @@ public static class Startup
             };
         });
         app.Services.GetService<MqttClientSubscriber>()?.CommunicateWithBroker();
+        //TODO change to a test
+        var str = app.Services.GetService<NpgsqlDataSource>().OpenConnection().QueryFirst<string>("select 'hello world'");
+        Console.WriteLine(str);
         return app;
     }
 }

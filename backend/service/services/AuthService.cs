@@ -22,6 +22,24 @@ public class AuthService
         _passwordHashRepository = passwordHashRepository;
     }
 
+    public void tetingDb()
+    {
+        _userRepository.TestDatabaseConnection();
+    }
+    public List<Emailform> GetUsers()
+    {
+        var emails = new List<Emailform>();
+        var allmails = _userRepository.GetUsers();
+        foreach (var emailform in allmails)
+        {
+            var email = new Emailform
+            {
+                email = emailform.email
+            };
+            emails.Add(email);
+        }
+        return emails;
+    }
     
     public bool PhoneNumberValid(string number)
     {

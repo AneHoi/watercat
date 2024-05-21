@@ -1,0 +1,68 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+
+/* Tilpas baggrundsfarven */
+.toast-message {
+  color: #ff0000; /* Rød tekstfarve */
+  background-color: #bb1c1c; /* Baggrundsfarve */
+  border-radius: 20px; /* Mere afrundede hjørner */
+  padding: 15px; /* Øget polstring */
+  font-size: 1.2em; /* Større skriftstørrelse */
+}
+
+/* Tilpas skyggen for at få et løft */
+.toast-wrapper {
+  box-shadow: 0 10px 20px rgba(220, 19, 19, 0.5); /* Mere udtalt skygge */
+}
+
+/* Tilpas animation */
+.toast-wrapper {
+  animation: slideIn 1s ease-in-out; /* Langsommere indskydningsanimation */
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%); /* Startposition for animation */
+  }
+  to {
+    transform: translateY(0); /* Slutposition for animation */
+  }
+}
+
+/* Tilpas størrelsen af toasten på større skærme */
+@media (min-width: 768px) {
+  .toast-message {
+    font-size: 1.5em; /* Større skriftstørrelse på større skærme */
+  }
+}
+
+.climate-color {
+  color: #133157;
+  font-variant: all-small-caps;
+  font-family: Verdana;
+}

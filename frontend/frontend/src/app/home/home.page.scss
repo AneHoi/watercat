@@ -1,0 +1,17 @@
+ion-split-pane {
+  --side-width: 1px;
+
+  --border: 1px solid #d8dade;
+}
+
+ion-accordion.accordion-collapsing ion-item[slot='header'],
+ion-accordion.accordion-collapsed ion-item[slot='header'],
+ion-toolbar{
+  --background: var(--ion-color-light);
+  --color: var(--ion-color-light-contrast);
+}
+
+ion-accordion.accordion-expanding ion-item[slot='header'],
+ion-accordion.accordion-expanded ion-item[slot='header'] {
+  --color: #133157;
+}
