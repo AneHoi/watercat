@@ -12,10 +12,8 @@ public class EndUser
 {
     public int Id { get; set; }
     public string? Email { get; set; }
-
     public PasswordHash? PasswordInfo;
     //todo should we have admin and ban rights??
-
 }
 /**
  * contains all information from a single user EXCLUDING password

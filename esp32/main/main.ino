@@ -1,12 +1,16 @@
-#include <WiFi.h>
+
 #include <PubSubClient.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <iostream>
+#include <string>  // for string and to_string()
+#include "network_lib.h"
+#include "motor.h"
+#include "distancesensor.h"
+#define SOUND_SPEED 0.034
 
 const int switchpin = 4;
-const int motorpin = 12;
 
-//fo arduino
-//const int switchpin = 2;
-//const int motorpin = 9;
 int switchstate = 0;
 int stateChanged = 0;
 
@@ -18,26 +22,72 @@ const char* mqttUser = "FlespiToken R7ioy0LLhLzMw0pAUsadQ5tH67LS44a4ne21Uc5g3x80
 const char* mqttPassword = "";
 
 
+const int tempsensor = 13;
+OneWire oneWire(tempsensor);
+DallasTemperature DS18B20(&oneWire);
+
+float tempC;  // temperature in Celsius
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+//The motor instance
+const int motorpin = 12;
+Motor motor(motorpin);
+
+//The distance sensor
+const int distSensorEcho = 14;
+const int distSensorTrig = 15;
+DistanceSensor distSensor(distSensorEcho, distSensorTrig);
 
 void setup() {
-  Serial.begin(9600);
-  connectWifi();
-  connectBroker();
-  pinMode(motorpin, OUTPUT);
+  Serial.begin(115200);
+  connectWifi(ssid, password);
+  brokerConnection();
+
   pinMode(switchpin, INPUT_PULLUP);
+  //pinMode(distSensorTrig, OUTPUT);  // Sets the trigPin as an Output
+  //pinMode(distSensorEcho, INPUT);   // Sets the echoPin as an Input
+  DS18B20.begin();  // initialize the DS18B20 sensor
 }
-void connectWifi() {
-  WiFi.begin(ssid, password);
 
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.println("Connecting to WiFi..");
+
+void loop() {
+  float dist = distSensor.measureDistanceInCM();
+  Serial.println("dist: " + String(dist) + " cm");
+  switchstate = digitalRead(switchpin);
+  if (switchstate != stateChanged) {
+
+    stateChanged = switchstate;
+    bool ison = motor.ison();
+    Serial.println("State changed to " + String(ison));
+    String statest = "state changed to: " + String(switchstate);
+    client.publish("my/state", (char*)statest.c_str());
+    String temp = getTempperatur() + " ";
+    //client.publish("my/state", (char*)temp.c_str());
   }
+  if (switchstate == HIGH) {
+    motor.on();
+    delay(100);
 
-  Serial.println("Connected to the WiFi network");
+  } else {
+    motor.off();
+    delay(100);
+  }
 }
 
-void connectBroker(){
+int getTempperatur() {
+  DS18B20.requestTemperatures();       // send the command to get temperatures
+  tempC = DS18B20.getTempCByIndex(0);  // read temperature in °C
+
+  Serial.print("Temperature: ");
+  Serial.print(tempC);  // print the temperature in °C
+  Serial.print("°C\n");
+  return tempC;
+}
+
+
+void brokerConnection() {
   client.setServer(mqttServer, mqttPort);
 
   while (!client.connected()) {
@@ -53,26 +103,7 @@ void connectBroker(){
       Serial.print(client.state());
       delay(2000);
     }
-  }
 
-  client.publish("my/test", "Hello from ESP32");
-}
-
-
-void loop() {
-  switchstate = digitalRead(switchpin);
-  if (switchstate != stateChanged) {
-    stateChanged = stateChanged;
-    Client.publish("my/state", "state changed")
-  }
-  if (switchstate == HIGH) {
-    Serial.println("High + OFF");
-    digitalWrite(motorpin, LOW);¨
-
-    delay(100);
-  } else {
-    Serial.println("Low + ON");
-    digitalWrite(motorpin, HIGH);
-    delay(100);
+    client.publish("my/test", "Hello from ESP32");
   }
 }
