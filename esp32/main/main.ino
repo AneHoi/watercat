@@ -14,6 +14,13 @@ const int switchpin = 4;
 int switchstate = 0;
 int stateChanged = 0;
 
+//Temperature sensor
+float tempC;  // temperature in Celsius
+const int tempsensor = 13;
+OneWire oneWire(tempsensor);
+DallasTemperature DS18B20(&oneWire);
+
+//Wifi and broker connection
 const char* ssid = "Ane";
 const char* password = "qwertyuiop";
 const char* mqttServer = "mqtt.flespi.io";
@@ -21,21 +28,16 @@ const int mqttPort = 1883;
 const char* mqttUser = "FlespiToken R7ioy0LLhLzMw0pAUsadQ5tH67LS44a4ne21Uc5g3x80x44t7WIyab0GQ9XkFuFP";
 const char* mqttPassword = "";
 
-
-const int tempsensor = 13;
-OneWire oneWire(tempsensor);
-DallasTemperature DS18B20(&oneWire);
-
-float tempC;  // temperature in Celsius
-
 WiFiClient espClient;
 PubSubClient client(espClient);
 
 //The motor instance
+bool isMotorOnNow = false;
 const int motorpin = 12;
 Motor motor(motorpin);
 
 //The distance sensor
+float dist = 0;
 const int distSensorEcho = 14;
 const int distSensorTrig = 15;
 DistanceSensor distSensor(distSensorEcho, distSensorTrig);
@@ -44,48 +46,64 @@ void setup() {
   Serial.begin(115200);
   connectWifi(ssid, password);
   brokerConnection();
-
   pinMode(switchpin, INPUT_PULLUP);
-  //pinMode(distSensorTrig, OUTPUT);  // Sets the trigPin as an Output
-  //pinMode(distSensorEcho, INPUT);   // Sets the echoPin as an Input
   DS18B20.begin();  // initialize the DS18B20 sensor
 }
 
 
 void loop() {
-  float dist = distSensor.measureDistanceInCM();
-  Serial.println("dist: " + String(dist) + " cm");
+  dist = distSensor.measureDistanceInCM();
+  while (dist < 5) {
+    motor.on();
+    if (motor.ison() != isMotorOnNow) {
+      statechanged(motor.ison());
+    }
+    delay(5000);
+    dist = distSensor.measureDistanceInCM();
+  }
+  motor.off();
+  if (motor.ison() != isMotorOnNow) {
+    statechanged(motor.ison());
+  }
+
   switchstate = digitalRead(switchpin);
   if (switchstate != stateChanged) {
-
-    stateChanged = switchstate;
-    bool ison = motor.ison();
-    Serial.println("State changed to " + String(ison));
-    String statest = "state changed to: " + String(switchstate);
-    client.publish("my/state", (char*)statest.c_str());
-    String temp = getTempperatur() + " ";
-    //client.publish("my/state", (char*)temp.c_str());
+    printCurrentState();
   }
+
   if (switchstate == HIGH) {
-    motor.on();
-    delay(100);
+    motor.off();
+    delay(300);
 
   } else {
-    motor.off();
-    delay(100);
+    motor.on();
+    delay(2000);
   }
 }
+void statechanged(bool isOn) {
 
-int getTempperatur() {
+  sendDto(motor.ison(), tempC, dist);
+  isMotorOnNow = isOn;
+}
+
+float getTempperatur() {
   DS18B20.requestTemperatures();       // send the command to get temperatures
   tempC = DS18B20.getTempCByIndex(0);  // read temperature in °C
-
-  Serial.print("Temperature: ");
-  Serial.print(tempC);  // print the temperature in °C
-  Serial.print("°C\n");
   return tempC;
 }
 
+void printCurrentState() {
+  bool ison = motor.ison();
+  Serial.print("Distance: " + String(dist) + " cm\t\t");
+  Serial.print("State changed to " + String(ison));
+  String statest = "\t\tState changed to: " + String(switchstate);
+  client.publish("my/state", (char*)statest.c_str());
+  String temp = "Temperatur: " + String(getTempperatur()) + " ";
+  Serial.print("\t\tTemperature: ");
+  Serial.print(tempC);  // print the temperature in °C
+  Serial.print("°C\n");
+  client.publish("my/state", (char*)temp.c_str());
+}
 
 void brokerConnection() {
   client.setServer(mqttServer, mqttPort);

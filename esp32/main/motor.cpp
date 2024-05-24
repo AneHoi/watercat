@@ -16,11 +16,11 @@ bool Motor::ison(){
 }
 
 void Motor::on() {
-  digitalWrite(pin, HIGH);
+  digitalWrite(pin, LOW);
   this->isMotorOn = true;
 }
 
 void Motor::off() {
-  digitalWrite(pin, LOW);
+  digitalWrite(pin, HIGH);
   this->isMotorOn = false;
 }
