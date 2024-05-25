@@ -17,8 +17,6 @@ public class MqttClientSubscriber
         _readingsService = readingsService;
     }
     
-    
-    
     public async Task CommunicateWithBroker()
     {
 
@@ -45,7 +43,7 @@ public class MqttClientSubscriber
             {
                 var message = e.ApplicationMessage.ConvertPayloadToString();
            
-                var messageObject = JsonSerializer.Deserialize<DeviceData>(message);
+                var messageObject = JsonSerializer.Deserialize<DeviceWaterData>(message);
 
                 //TODO remove
                 Console.WriteLine("messageObject");

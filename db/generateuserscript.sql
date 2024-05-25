@@ -1,7 +1,26 @@
 DROP TABLE IF EXISTS PasswordHash;
 DROP TABLE IF EXISTS UserInformation;
 DROP TABLE IF EXISTS ContactInformation;
+DROP TABLE IF EXISTS Devices;
+DROP TABLE IF EXISTS CurrentState;
 DROP TABLE IF EXISTS Users;
+
+
+--Create device table
+CREATE TABLE Devices
+(
+    Id         SERIAL PRIMARY KEY,
+    DeviveName VARCHAR(255)
+);
+
+--Create currentState
+CREATE TABLE CurrentState
+(
+    DeviceId INT PRIMARY KEY,
+    isOn     bool not null,
+    FOREIGN KEY (DeviceId) REFERENCES Devices (Id)
+);
+
 
 -- Create User table
 CREATE TABLE Users

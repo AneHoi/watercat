@@ -20,3 +20,9 @@ public class DeviceData
     public int DeviceId { get; set; }
     public DeviceReadingsDto Data { get; set; }
 }
+
+public class DeviceWaterData
+{
+    public int DeviceId { get; set; }
+    public string Data { get; set; }
+}

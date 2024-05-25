@@ -5,46 +5,24 @@ namespace service.services;
 
 public class DeviceReadingsService
 {
-    
     public DeviceReadingsService()
     {
     }
-    
-    public void CreateReadings(DeviceData deviceReadingsDto)
+
+    public void CreateReadings(DeviceWaterData deviceReadingsDto)
     {
         var deviceId = deviceReadingsDto.DeviceId;
         //TODO remove
         Console.WriteLine("recieved");
+        Console.WriteLine("Data: " + deviceReadingsDto.Data.Length);
 
-        if (deviceReadingsDto.Data.Humidities.Any())
+        if (deviceReadingsDto.Data.Any())
         {
+            Console.WriteLine("Data: " + deviceReadingsDto.Data.Length);
             //_humidityRepository.SaveHumidityList(deviceId, deviceReadingsDto.Data.Humidities
-            
         }
         else
             throw new NullReferenceException("there is no humidity readings in dataset");
-
-        if (deviceReadingsDto.Data.Temperatures.Any())
-        {
-            //_temperatureRepository.SaveTemperatureList(deviceId, deviceReadingsDto.Data.Temperatures);
-        }
-        else
-            throw new NullReferenceException("there is no Temperature readings in dataset");
-
-        if (deviceReadingsDto.Data.Particles25.Any())
-        {
-            //_particlesRepository.SaveParticle25List(deviceId, deviceReadingsDto.Data.Particles25);
-        }
-        
-        else
-            throw new NullReferenceException("there is no 2.5 particles readings in dataset");
-
-        if (deviceReadingsDto.Data.Particles100.Any())
-        {
-            //_particlesRepository.SaveParticle100List(deviceId, deviceReadingsDto.Data.Particles100);
-        }
-        else
-            throw new NullReferenceException("there is no 10 particles readings in dataset");
     }
 
     public bool DeleteAllReadings(int deviceId)
