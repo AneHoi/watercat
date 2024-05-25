@@ -7,6 +7,8 @@
 #include "network_lib.h"
 #include "motor.h"
 #include "distancesensor.h"
+#include "responsedto.h"
+#include "timemanager.h"
 #define SOUND_SPEED 0.034
 
 const int switchpin = 4;
@@ -28,6 +30,12 @@ const int mqttPort = 1883;
 const char* mqttUser = "FlespiToken R7ioy0LLhLzMw0pAUsadQ5tH67LS44a4ne21Uc5g3x80x44t7WIyab0GQ9XkFuFP";
 const char* mqttPassword = "";
 
+
+const int deviceId = 1;
+DeviceReadingsDto readings;
+TimeManager timeManager(ssid, password);
+
+
 WiFiClient espClient;
 PubSubClient client(espClient);
 
@@ -44,8 +52,6 @@ DistanceSensor distSensor(distSensorEcho, distSensorTrig);
 
 void setup() {
   Serial.begin(115200);
-  connectWifi(ssid, password);
-  brokerConnection();
   pinMode(switchpin, INPUT_PULLUP);
   DS18B20.begin();  // initialize the DS18B20 sensor
 }
@@ -56,21 +62,25 @@ void loop() {
   while (dist < 5) {
     motor.on();
     if (motor.ison() != isMotorOnNow) {
-      statechanged(motor.ison());
+      statechanged("catfountain/waterstate", motor.ison());
     }
     delay(5000);
     dist = distSensor.measureDistanceInCM();
   }
   motor.off();
   if (motor.ison() != isMotorOnNow) {
-    statechanged(motor.ison());
+    statechanged("catfountain/waterstate", motor.ison());
   }
 
   switchstate = digitalRead(switchpin);
   if (switchstate != stateChanged) {
     printCurrentState();
   }
+  checkForButtonPress();
+}
 
+//For the button
+void checkForButtonPress() {
   if (switchstate == HIGH) {
     motor.off();
     delay(300);
@@ -80,10 +90,23 @@ void loop() {
     delay(2000);
   }
 }
-void statechanged(bool isOn) {
 
-  sendDto(motor.ison(), tempC, dist);
-  isMotorOnNow = isOn;
+void statechanged(const char* topic, bool isOn) {
+  std::string currentTime = timeManager.getCurrentTime();  //gets current real time
+  SensorDto temperatureReading;
+  temperatureReading.Value = tempC;
+  temperatureReading.TimeStamp = currentTime;
+  readings.Temperatures.push_back(temperatureReading);
+  //Just adding one more for testdata
+  SensorDto temperatureReadingto;
+  temperatureReadingto.Value = tempC;
+  temperatureReadingto.TimeStamp = currentTime;
+  readings.Temperatures.push_back(temperatureReadingto);
+
+  //Topic is ready, we create the payload to send the object
+  DeviceData deviceData(deviceId, readings);
+  std::string jsonString = deviceData.toJsonString();
+  sendDataToBroker(topic, jsonString.c_str());
 }
 
 float getTempperatur() {
@@ -124,4 +147,22 @@ void brokerConnection() {
 
     client.publish("my/test", "Hello from ESP32");
   }
+}
+
+
+void sendDataToBroker(const char* topic, const char* payload) {
+  //TODO when there is no wifi just run
+  connectWifi(ssid, password);
+
+  client.setServer(mqttServer, mqttPort);  // Initialisering af MQTT-server og port
+
+  if (!client.connected()) {
+    brokerConnection();
+  }
+  client.publish(topic, payload);  //set max size in lib if needed
+  Serial.println("Dto Send");
+  Serial.println("");
+
+  WiFi.disconnect(true);
+  Serial.println("Disconnected from WiFi");
 }

@@ -11,10 +11,11 @@ void connectWifi(const char* ssid, const char* password) {
   Serial.println("Connected to the WiFi network");
 }
 
-void sendDto(bool isOn, float tempC, float distanceCm){
+void sendDto(String topic, bool isOn, float tempC, float distanceCm){
 
 }
 
+/* TODO Not working do not know why
 PubSubClient connectBroker(PubSubClient client, const char* mqttServer, const int mqttPort, const char* mqttUser, const char* mqttPassword) {
   client.setServer(mqttServer, mqttPort);
 
@@ -32,3 +33,4 @@ PubSubClient connectBroker(PubSubClient client, const char* mqttServer, const in
     return client;
   }
 }
+*/
