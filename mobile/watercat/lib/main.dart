@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:watercat/screens/userscreen.dart';
 
-import 'screens/historyscreen.dart';
 import 'screens/homescreen.dart';
-import 'service/navigatorservice.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,16 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       //home: const HomeScreen(),
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('WaterCat'),
-          ),
-          body: HomeScreen(),
-          bottomNavigationBar: const BottomNavigationbar(),
-        ),
-      ),
+      home: const HomeScreen(),
     );
   }
 }
