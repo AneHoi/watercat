@@ -21,7 +21,7 @@ public static class Startup
         app.Run();
     }
 
-    public static WebApplication Start(string[] args)
+    public static WebApplication Start(string[] args, string? getEnvironmentVariable)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -32,8 +32,6 @@ public static class Startup
         builder.Services.AddNpgsqlDataSource(Utilities.ProperlyFormattedConnectionString);
 
         builder.Services.AddSingleton(provider => Utilities.ProperlyFormattedConnectionString);
-        //builder.Services.AddSingleton(provider => new PasswordHashRepository(provider.GetService<NpgsqlDataSource>()));
-        //builder.Services.AddSingleton(provider => new UserRepository(provider.GetService<NpgsqlDataSource>()));
         
         builder.Services.AddSingleton<PasswordHashRepository>();
         builder.Services.AddSingleton<UserRepository>();

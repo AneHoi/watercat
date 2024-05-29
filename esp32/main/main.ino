@@ -4,6 +4,8 @@
 #include <DallasTemperature.h>
 #include <iostream>
 #include <string>  // for string and to_string()
+#include <LiquidCrystal_I2C.h>
+
 #include "network_lib.h"
 #include "motor.h"
 #include "distancesensor.h"
@@ -12,6 +14,7 @@
 #define SOUND_SPEED 0.034
 
 const int switchpin = 4;
+const int waterpin = 36;
 
 int switchstate = 0;
 int stateChanged = 0;
@@ -50,26 +53,66 @@ const int distSensorEcho = 14;
 const int distSensorTrig = 15;
 DistanceSensor distSensor(distSensorEcho, distSensorTrig);
 
+// set the LCD number of columns and rows
+int lcdColumns = 16;
+int lcdRows = 2;
+
+// set LCD address, number of columns and rows
+// if you don't know your display address, run an I2C scanner sketch
+LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);
+
 void setup() {
   Serial.begin(115200);
+  // initialize LCD
+  lcd.init();
+  // turn on LCD backlight
+  lcd.backlight();
+  sendDataToBroker("my/test", "Hello from ESP32");
   pinMode(switchpin, INPUT_PULLUP);
+  pinMode(waterpin, INPUT_PULLUP);
   DS18B20.begin();  // initialize the DS18B20 sensor
 }
 
 
 void loop() {
+  if (!client.connected()) {
+    connectToBroker();
+  }
+  client.loop();
+
   dist = distSensor.measureDistanceInCM();
-  while (dist < 5) {
+  while ((dist < 5) && (digitalRead(waterpin) == LOW)) {
     motor.on();
     if (motor.ison() != isMotorOnNow) {
+      // set cursor to first column, first row
+      lcd.setCursor(0, 0);
+      // print message
+      lcd.print("Waterpump: on");
+      // set cursor to first column, first row
+      lcd.setCursor(0, 1);
+      // print message
+      lcd.print("Temp: " + String(getTempperatur()) + " C");
+      if (digitalRead(waterpin) == LOW) {
+        Serial.println("waterstate is low and good");
+      }
+
+
       statechanged("catfountain/waterstate", motor.ison());
+
+      String temp = "Temperatur: " + String(getTempperatur()) + "State changed to: on";
+      sendDataToBroker("my/state", (char*)temp.c_str());
     }
-    delay(5000);
+    //delay(5000);
     dist = distSensor.measureDistanceInCM();
   }
   motor.off();
   if (motor.ison() != isMotorOnNow) {
     statechanged("catfountain/waterstate", motor.ison());
+    // clears the display to print new message
+    lcd.clear();
+
+    String temp = "Temperatur: " + String(getTempperatur()) + "State changed to: " + String(switchstate) + " ";
+    sendDataToBroker("my/state", (char*)temp.c_str());
   }
 
   switchstate = digitalRead(switchpin);
@@ -77,21 +120,36 @@ void loop() {
     printCurrentState();
   }
   checkForButtonPress();
+  checkForfloating();
 }
 
+//For the floating sensor
+void checkForfloating() {
+  if (digitalRead(waterpin) == HIGH) {
+    Serial.println("No water");
+    //delay(300);
+  } else if (digitalRead(waterpin) == LOW) {
+    //Serial.println("Water");
+  } else {
+    Serial.println("??????????");
+    motor.on();
+    //delay(2000);
+  }
+}
 //For the button
 void checkForButtonPress() {
   if (switchstate == HIGH) {
     motor.off();
-    delay(300);
+    //delay(300);
 
   } else {
     motor.on();
-    delay(2000);
+    //delay(2000);
   }
 }
 
 void statechanged(const char* topic, bool isOn) {
+  isMotorOnNow = isOn;
   std::string currentTime = timeManager.getCurrentTime();  //gets current real time
   SensorDto temperatureReading;
   temperatureReading.Value = tempC;
@@ -106,7 +164,7 @@ void statechanged(const char* topic, bool isOn) {
   //Topic is ready, we create the payload to send the object
   DeviceData deviceData(deviceId, readings);
   std::string jsonString = deviceData.toJsonString();
-  sendDataToBroker(topic, jsonString.c_str());
+  //sendDataToBroker(topic, jsonString.c_str());
 }
 
 float getTempperatur() {
@@ -119,50 +177,61 @@ void printCurrentState() {
   bool ison = motor.ison();
   Serial.print("Distance: " + String(dist) + " cm\t\t");
   Serial.print("State changed to " + String(ison));
-  String statest = "\t\tState changed to: " + String(switchstate);
-  client.publish("my/state", (char*)statest.c_str());
-  String temp = "Temperatur: " + String(getTempperatur()) + " ";
   Serial.print("\t\tTemperature: ");
-  Serial.print(tempC);  // print the temperature in °C
+  Serial.print(String(getTempperatur()));  // print the temperature in °C
   Serial.print("°C\n");
-  client.publish("my/state", (char*)temp.c_str());
 }
 
-void brokerConnection() {
+//For publishing
+void sendDataToBroker(const char* topic, const char* payload) {
+  connectToBroker();
+  bool sucess = client.publish(topic, payload);
+  if (sucess) {
+    Serial.println("Sucess");
+  }
+  Serial.println("Data sent");
+
+  WiFi.disconnect(true);
+  Serial.println("Disconnected from WiFi");
+}
+
+
+void connectToBroker() {
+  // Ensure WiFi is connected
+  if (WiFi.status() != WL_CONNECTED) {
+    connectWifi(ssid, password);
+  }
+
+  // Connect to the MQTT broker
   client.setServer(mqttServer, mqttPort);
+  client.setCallback(callback);
 
   while (!client.connected()) {
     Serial.println("Connecting to MQTT...");
 
     if (client.connect("ESP32Client", mqttUser, mqttPassword)) {
-
       Serial.println("connected");
 
-    } else {
+      //Setting the subscribe topic
+      client.subscribe("my/state");
 
+    } else {
       Serial.print("failed with state ");
       Serial.print(client.state());
       delay(2000);
     }
-
-    client.publish("my/test", "Hello from ESP32");
   }
 }
 
+// For subscribing
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Message arrived [");
+  Serial.print(topic);
+  Serial.print("]: ");
 
-void sendDataToBroker(const char* topic, const char* payload) {
-  //TODO when there is no wifi just run
-  connectWifi(ssid, password);
-
-  client.setServer(mqttServer, mqttPort);  // Initialisering af MQTT-server og port
-
-  if (!client.connected()) {
-    brokerConnection();
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)payload[i]);
+   // delay(1000);
   }
-  client.publish(topic, payload);  //set max size in lib if needed
-  Serial.println("Dto Send");
-  Serial.println("");
-
-  WiFi.disconnect(true);
-  Serial.println("Disconnected from WiFi");
+  Serial.println();
 }

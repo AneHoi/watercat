@@ -24,13 +24,13 @@ public class ClientWantsAllUsers : BaseEventHandler<ClientWantsAllUsersDto>
         var envvar = Environment.GetEnvironmentVariable(EnvVarKeys.pgconn.ToString());
         Console.WriteLine("envvar: " + envvar);
         _authService.tetingDb();
-        /*
+        
         var users = _authService.GetUsers();
         socket.SendDto(new ServerSendsAllUsers
         {
             users = users
         });
-        */
+        
         return Task.CompletedTask;
     }
 }
