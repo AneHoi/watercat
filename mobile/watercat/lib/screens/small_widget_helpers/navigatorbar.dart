@@ -34,8 +34,8 @@ class BottomNavigationbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return Container(
+      margin: EdgeInsets.all(20),
       child: ClipRRect(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(radius),

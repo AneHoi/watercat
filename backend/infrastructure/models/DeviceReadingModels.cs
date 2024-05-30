@@ -26,3 +26,9 @@ public class DeviceWaterData
     public int DeviceId { get; set; }
     public string Data { get; set; }
 }
+/* Example JSON
+ {
+"DeviceId": 1,
+"Data": "hello"
+}
+*/

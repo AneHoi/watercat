@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../settingsscreen.dart';
-final textstyle = const TextStyle(
+final textStyle = TextStyle(
     fontWeight: FontWeight.bold,
     color: Colors.white
 );
@@ -12,7 +12,7 @@ AppBar buildAppBar(String pagename, BuildContext context) {
       padding: const EdgeInsets.only(left: 20.0),
       child: Text(
           pagename,
-          style: textstyle
+          style: textStyle
       ),
     ),
     flexibleSpace: Container(
@@ -34,7 +34,7 @@ AppBar buildAppBar(String pagename, BuildContext context) {
           icon: const Icon(Icons.settings),
           onPressed: () {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => SettingsScreen()),
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
             );
           },
         ),

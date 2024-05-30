@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'small_widget_helpers/navigatorbar.dart';
+import 'package:watercat/screens/small_widget_helpers/screenlayout.dart';
 
 
 class UserScreen extends StatelessWidget {
@@ -8,11 +7,50 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-            title: const Text("User")
-        ),
-        bottomNavigationBar: const BottomNavigationbar(),
+
+    final textTheme = Theme.of(context).textTheme;
+
+    return getLayout(UserContent(), "User page", context);
+  }
+}
+
+class UserContent extends StatelessWidget {
+  const UserContent({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            constraints: BoxConstraints(maxWidth: 800),
+            decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color.fromARGB(143, 217, 217, 217),
+                ),
+                color: const Color.fromARGB(143, 217, 217, 217),
+                borderRadius: const BorderRadius.all(Radius.circular(40))),
+            padding: const EdgeInsets.all(20.0),
+            margin: const EdgeInsets.all(20.0),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                        constraints: BoxConstraints(minWidth: 100, maxWidth: 300),
+                        child: Image.asset('assets/fountain.png')),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
