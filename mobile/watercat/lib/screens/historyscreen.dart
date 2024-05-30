@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../service/navigatorservice.dart';
+import 'small_widget_helpers/navigatorbar.dart';
+
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});

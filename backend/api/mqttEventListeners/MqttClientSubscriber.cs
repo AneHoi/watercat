@@ -19,7 +19,7 @@ public class MqttClientSubscriber
     
     public async Task CommunicateWithBroker()
     {
-
+        Console.WriteLine("connecting to broker...");
         var mqttFactory = new MqttFactory();
         var mqttClient = mqttFactory.CreateMqttClient();
         
@@ -39,10 +39,11 @@ public class MqttClientSubscriber
 
         mqttClient.ApplicationMessageReceivedAsync += async e =>
         {
+            Console.WriteLine("message");
             try
             {
                 var message = e.ApplicationMessage.ConvertPayloadToString();
-           
+                Console.WriteLine("...");
                 var messageObject = JsonSerializer.Deserialize<DeviceWaterData>(message);
 
                 //TODO remove

@@ -21,7 +21,7 @@ public static class Startup
         app.Run();
     }
 
-    public static WebApplication Start(string[] args, string? getEnvironmentVariable)
+    public static WebApplication Start(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../screens/historyscreen.dart';
-import '../screens/homescreen.dart';
-import '../screens/userscreen.dart';
+import '../historyscreen.dart';
+import '../homescreen.dart';
+import '../userscreen.dart';
 
 class MenuItem {
   late String name;
@@ -14,7 +14,8 @@ class MenuItem {
 
 var menu = <MenuItem>[
   MenuItem(name: "Home", screen: HomeScreen.new, icon: Icons.home),
-  MenuItem(name: "History", screen: HistoryScreen.new, icon: Icons.calendar_month),
+  MenuItem(
+      name: "History", screen: HistoryScreen.new, icon: Icons.calendar_month),
   MenuItem(name: "User", screen: UserScreen.new, icon: Icons.person),
 ];
 
