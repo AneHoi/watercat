@@ -48,7 +48,6 @@ const int motorpin = 12;
 Motor motor(motorpin);
 
 //The distance sensor
-float dist = 0;
 const int distSensorEcho = 14;
 const int distSensorTrig = 15;
 DistanceSensor distSensor(distSensorEcho, distSensorTrig);
@@ -60,6 +59,8 @@ int lcdRows = 2;
 // set LCD address, number of columns and rows
 // if you don't know your display address, run an I2C scanner sketch
 LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);
+
+bool acceptableWaterstate = true;
 
 void setup() {
   Serial.begin(115200);
@@ -75,55 +76,37 @@ void setup() {
 
 void loop() {
   //Keeps connection open, for incomming brokermessages
-    if (!client.connected()) {
-      connectToBroker();
-    }
-    client.loop();
+  if (!client.connected()) {
+    connectToBroker();
+  }
+  client.loop();
   //Make sure, there is water
   if (digitalRead(waterpin) == HIGH) {
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    // print message to LCD
-    lcd.print("Not enough water");
     //Todo Send message to broker
-    client.publish("my/state", "not enoungh water");
-    sendDataToBroker("my/state", "not enough water");
-    
+    if (acceptableWaterstate) {
+      acceptableWaterstate = false;
+      sendDataToBroker("catfountain/waterstate", "Not enough water");
+      printToLCD("Not enough water", 0);
+    }
   } else {
+    if (!acceptableWaterstate) {
+      acceptableWaterstate = true;
+    }
     lcd.clear();
-    dist = distSensor.measureDistanceInCM();
-    while ((dist < 5) && (digitalRead(waterpin) == LOW)) {
+    //Monitor the cats distance to the device
+    while (distSensor.measureDistanceInCM() < 5) {
       motor.on();
       if (motor.ison() != isMotorOnNow) {
-        // set cursor to first column, first row
-        lcd.setCursor(0, 0);
-        // print message
-        lcd.print("Waterpump: on");
-        // set cursor to first column, first row
-        lcd.setCursor(0, 1);
-        // print message
-        lcd.print("Temp: " + String(getTempperatur()) + " C");
-        if (digitalRead(waterpin) == LOW) {
-          Serial.println("waterstate is low and good");
-        }
-
-
+        printToLCD("Waterpump: on", 0);
+        printToLCD("Temp: " + String(getTempperatur()) + " C", 1);
         statechanged("catfountain/waterstate", motor.ison());
-
-        String temp = "Temperatur: " + String(getTempperatur()) + "State changed to: on";
-        sendDataToBroker("my/state", (char*)temp.c_str());
       }
-      //delay(5000);
-      dist = distSensor.measureDistanceInCM();
     }
     motor.off();
     if (motor.ison() != isMotorOnNow) {
-      statechanged("catfountain/waterstate", motor.ison());
+      statechanged("catfountain/activity", motor.ison());
       // clears the display to print new message
       lcd.clear();
-
-      String temp = "Temperatur: " + String(getTempperatur()) + "State changed to: " + String(switchstate) + " ";
-      sendDataToBroker("my/state", (char*)temp.c_str());
     }
 
     switchstate = digitalRead(switchpin);
@@ -131,22 +114,15 @@ void loop() {
       printCurrentState();
     }
     checkForButtonPress();
-    checkForfloating();
   }
 }
 
-//For the floating sensor
-void checkForfloating() {
-  if (digitalRead(waterpin) == HIGH) {
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    // print message
-    lcd.print("Not enough water");
-    //Todo Send message to broker
-    sendDataToBroker("my/state", "not enough water");
-  } else {
-  }
+void printToLCD(String message, int displaycolum) {
+  lcd.setCursor(0, displaycolum);
+  // print message to LCD
+  lcd.print(message);
 }
+
 //For the button
 void checkForButtonPress() {
   if (switchstate == HIGH) {
@@ -163,18 +139,21 @@ void statechanged(const char* topic, bool isOn) {
   SensorDto temperatureReading;
   temperatureReading.Value = tempC;
   temperatureReading.TimeStamp = currentTime;
+  //Add the reading
   readings.Temperatures.push_back(temperatureReading);
-  //Just adding one more for testdata
-  SensorDto temperatureReadingto;
-  temperatureReadingto.Value = tempC;
-  temperatureReadingto.TimeStamp = currentTime;
-  readings.Temperatures.push_back(temperatureReadingto);
 
-  //Topic is ready, we create the payload to send the object
+  //Topic is ready, here we create the payload to send the object
   DeviceData deviceData(deviceId, readings);
   std::string jsonString = deviceData.toJsonString();
+  Serial.println("");
+  Serial.print("Sending from: ");
   Serial.print(topic);
+  Serial.print(" payload: ");
+  Serial.print(jsonString.c_str());
+  Serial.println("");
   sendDataToBroker(topic, jsonString.c_str());
+  //clear all readings
+  readings.Temperatures.clear();
 }
 
 float getTempperatur() {
@@ -185,7 +164,7 @@ float getTempperatur() {
 
 void printCurrentState() {
   bool ison = motor.ison();
-  Serial.print("Distance: " + String(dist) + " cm\t\t");
+  Serial.print("Distance: " + String(distSensor.measureDistanceInCM()) + " cm\t\t");
   Serial.print("State changed to " + String(ison));
   Serial.print("\t\tTemperature: ");
   Serial.print(String(getTempperatur()));  // print the temperature in °C
@@ -194,22 +173,16 @@ void printCurrentState() {
 
 //For publishing
 void sendDataToBroker(const char* topic, const char* payload) {
-  connectToBroker();
-  bool sucess = client.publish(topic, payload);
-  if (sucess) {
-    Serial.println("Sucess");
-  }
-  Serial.println("Data sent");
-
-  WiFi.disconnect(true);
-  Serial.println("Disconnected from WiFi");
+  client.publish(topic, payload);
 }
 
 
 void connectToBroker() {
   // Ensure WiFi is connected
   if (WiFi.status() != WL_CONNECTED) {
+    printToLCD("Connecting to WiFi", 0);
     connectWifi(ssid, password);
+    lcd.clear();
   }
 
   // Connect to the MQTT broker
@@ -223,7 +196,7 @@ void connectToBroker() {
       Serial.println("connected");
 
       //Setting the subscribe topic
-      client.subscribe("my/state");
+      client.subscribe("catfountain/clientrequests");
 
     } else {
       Serial.print("failed with state ");
@@ -241,7 +214,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
-    // delay(1000);
   }
   Serial.println();
 }
