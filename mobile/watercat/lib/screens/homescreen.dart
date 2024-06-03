@@ -49,7 +49,7 @@ class HomeContent extends StatelessWidget {
                     Text(appTitle, style: textTheme.headlineLarge),
                     Container(
                         constraints:
-                            BoxConstraints(minWidth: 100, maxWidth: 300),
+                            BoxConstraints(minWidth: 50, maxWidth: 300),
                         child: Image.asset('assets/fountain.png')),
                     const ToggleSwitch(),
                   ],

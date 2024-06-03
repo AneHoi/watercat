@@ -67,7 +67,6 @@ void setup() {
   lcd.init();
   // turn on LCD backlight
   lcd.backlight();
-  sendDataToBroker("my/test", "Hello from ESP32");
   pinMode(switchpin, INPUT_PULLUP);
   pinMode(waterpin, INPUT_PULLUP);
   DS18B20.begin();  // initialize the DS18B20 sensor
@@ -75,76 +74,86 @@ void setup() {
 
 
 void loop() {
-  if (!client.connected()) {
-    connectToBroker();
-  }
-  client.loop();
+  //Keeps connection open, for incomming brokermessages
+    if (!client.connected()) {
+      connectToBroker();
+    }
+    client.loop();
+  //Make sure, there is water
+  if (digitalRead(waterpin) == HIGH) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    // print message to LCD
+    lcd.print("Not enough water");
+    //Todo Send message to broker
+    client.publish("my/state", "not enoungh water");
+    sendDataToBroker("my/state", "not enough water");
+    
+  } else {
+    lcd.clear();
+    dist = distSensor.measureDistanceInCM();
+    while ((dist < 5) && (digitalRead(waterpin) == LOW)) {
+      motor.on();
+      if (motor.ison() != isMotorOnNow) {
+        // set cursor to first column, first row
+        lcd.setCursor(0, 0);
+        // print message
+        lcd.print("Waterpump: on");
+        // set cursor to first column, first row
+        lcd.setCursor(0, 1);
+        // print message
+        lcd.print("Temp: " + String(getTempperatur()) + " C");
+        if (digitalRead(waterpin) == LOW) {
+          Serial.println("waterstate is low and good");
+        }
 
-  dist = distSensor.measureDistanceInCM();
-  while ((dist < 5) && (digitalRead(waterpin) == LOW)) {
-    motor.on();
-    if (motor.ison() != isMotorOnNow) {
-      // set cursor to first column, first row
-      lcd.setCursor(0, 0);
-      // print message
-      lcd.print("Waterpump: on");
-      // set cursor to first column, first row
-      lcd.setCursor(0, 1);
-      // print message
-      lcd.print("Temp: " + String(getTempperatur()) + " C");
-      if (digitalRead(waterpin) == LOW) {
-        Serial.println("waterstate is low and good");
+
+        statechanged("catfountain/waterstate", motor.ison());
+
+        String temp = "Temperatur: " + String(getTempperatur()) + "State changed to: on";
+        sendDataToBroker("my/state", (char*)temp.c_str());
       }
-
-
+      //delay(5000);
+      dist = distSensor.measureDistanceInCM();
+    }
+    motor.off();
+    if (motor.ison() != isMotorOnNow) {
       statechanged("catfountain/waterstate", motor.ison());
+      // clears the display to print new message
+      lcd.clear();
 
-      String temp = "Temperatur: " + String(getTempperatur()) + "State changed to: on";
+      String temp = "Temperatur: " + String(getTempperatur()) + "State changed to: " + String(switchstate) + " ";
       sendDataToBroker("my/state", (char*)temp.c_str());
     }
-    //delay(5000);
-    dist = distSensor.measureDistanceInCM();
-  }
-  motor.off();
-  if (motor.ison() != isMotorOnNow) {
-    statechanged("catfountain/waterstate", motor.ison());
-    // clears the display to print new message
-    lcd.clear();
 
-    String temp = "Temperatur: " + String(getTempperatur()) + "State changed to: " + String(switchstate) + " ";
-    sendDataToBroker("my/state", (char*)temp.c_str());
+    switchstate = digitalRead(switchpin);
+    if (switchstate != stateChanged) {
+      printCurrentState();
+    }
+    checkForButtonPress();
+    checkForfloating();
   }
-
-  switchstate = digitalRead(switchpin);
-  if (switchstate != stateChanged) {
-    printCurrentState();
-  }
-  checkForButtonPress();
-  checkForfloating();
 }
 
 //For the floating sensor
 void checkForfloating() {
   if (digitalRead(waterpin) == HIGH) {
-    Serial.println("No water");
-    //delay(300);
-  } else if (digitalRead(waterpin) == LOW) {
-    //Serial.println("Water");
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    // print message
+    lcd.print("Not enough water");
+    //Todo Send message to broker
+    sendDataToBroker("my/state", "not enough water");
   } else {
-    Serial.println("??????????");
-    motor.on();
-    //delay(2000);
   }
 }
 //For the button
 void checkForButtonPress() {
   if (switchstate == HIGH) {
     motor.off();
-    //delay(300);
 
   } else {
     motor.on();
-    //delay(2000);
   }
 }
 
@@ -164,7 +173,8 @@ void statechanged(const char* topic, bool isOn) {
   //Topic is ready, we create the payload to send the object
   DeviceData deviceData(deviceId, readings);
   std::string jsonString = deviceData.toJsonString();
-  //sendDataToBroker(topic, jsonString.c_str());
+  Serial.print(topic);
+  sendDataToBroker(topic, jsonString.c_str());
 }
 
 float getTempperatur() {
@@ -231,7 +241,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
-   // delay(1000);
+    // delay(1000);
   }
   Serial.println();
 }
