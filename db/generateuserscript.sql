@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS PasswordHash;
 DROP TABLE IF EXISTS UserInformation;
 DROP TABLE IF EXISTS ContactInformation;
 DROP TABLE IF EXISTS Devices;
-DROP TABLE IF EXISTS CurrentState;
+DROP TABLE IF EXISTS HistoryStateTable;
 DROP TABLE IF EXISTS Users;
 
 
@@ -13,11 +13,13 @@ CREATE TABLE Devices
     DeviveName VARCHAR(255)
 );
 
---Create currentState
-CREATE TABLE CurrentState
+--Create the table for the history of the fountain
+CREATE TABLE HistoryStateTable
 (
-    DeviceId INT PRIMARY KEY,
-    isOn     bool not null,
+    DeviceId        INT NOT NULL,
+    isOn            bool not null,
+    temperatur      float not null,
+    timestamp       varchar(50) NOT NULL,
     FOREIGN KEY (DeviceId) REFERENCES Devices (Id)
 );
 

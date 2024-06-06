@@ -4,5 +4,7 @@ namespace api.serverEventModels;
 
 public class ServerSendsCurrentFountainstate : BaseDto
 {
-    public bool? isOn { get; set; }
+    public bool ison { get; set; }
+    public double temperatur { get; set; }
+    public string TimeStamp { get; set; }
 }

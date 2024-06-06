@@ -7,14 +7,14 @@
 
 // Sensor data structure
 struct SensorDto {
-    double Value;
+    double MotorValue;
+    double TemperatureValue;
     std::string TimeStamp;
 };
 
 // Device readings data structure
 struct DeviceReadingsDto {
-    std::vector<SensorDto> Temperatures;
-    std::vector<SensorDto> Motorstates;
+    std::vector<SensorDto> DeviceData;
 };
 
 // Device data class

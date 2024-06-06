@@ -503,7 +503,10 @@ ServerEvent _$ServerEventFromJson(Map<String, dynamic> json) {
 mixin _$ServerEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(@JsonKey(name: 'isOn') bool isOn)
+    required TResult Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') String timestamp)
         serverSendsCurrentFountainstate,
     required TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)
@@ -517,7 +520,10 @@ mixin _$ServerEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(@JsonKey(name: 'isOn') bool isOn)?
+    TResult? Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') String timestamp)?
         serverSendsCurrentFountainstate,
     TResult? Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
@@ -531,7 +537,10 @@ mixin _$ServerEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(@JsonKey(name: 'isOn') bool isOn)?
+    TResult Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') String timestamp)?
         serverSendsCurrentFountainstate,
     TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
@@ -600,7 +609,10 @@ abstract class _$$ServerSendsCurrentFountainstateImplCopyWith<$Res> {
           $Res Function(_$ServerSendsCurrentFountainstateImpl) then) =
       __$$ServerSendsCurrentFountainstateImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({@JsonKey(name: 'isOn') bool isOn});
+  $Res call(
+      {@JsonKey(name: 'ison') bool isOn,
+      @JsonKey(name: 'temperatur') double temperatur,
+      @JsonKey(name: 'TimeStamp') String timestamp});
 }
 
 /// @nodoc
@@ -617,12 +629,22 @@ class __$$ServerSendsCurrentFountainstateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isOn = null,
+    Object? temperatur = null,
+    Object? timestamp = null,
   }) {
     return _then(_$ServerSendsCurrentFountainstateImpl(
       isOn: null == isOn
           ? _value.isOn
           : isOn // ignore: cast_nullable_to_non_nullable
               as bool,
+      temperatur: null == temperatur
+          ? _value.temperatur
+          : temperatur // ignore: cast_nullable_to_non_nullable
+              as double,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -633,7 +655,10 @@ class _$ServerSendsCurrentFountainstateImpl
     with DiagnosticableTreeMixin
     implements ServerSendsCurrentFountainstate {
   _$ServerSendsCurrentFountainstateImpl(
-      {@JsonKey(name: 'isOn') required this.isOn, final String? $type})
+      {@JsonKey(name: 'ison') required this.isOn,
+      @JsonKey(name: 'temperatur') required this.temperatur,
+      @JsonKey(name: 'TimeStamp') required this.timestamp,
+      final String? $type})
       : $type = $type ?? 'ServerSendsCurrentFountainstate';
 
   factory _$ServerSendsCurrentFountainstateImpl.fromJson(
@@ -641,15 +666,21 @@ class _$ServerSendsCurrentFountainstateImpl
       _$$ServerSendsCurrentFountainstateImplFromJson(json);
 
   @override
-  @JsonKey(name: 'isOn')
+  @JsonKey(name: 'ison')
   final bool isOn;
+  @override
+  @JsonKey(name: 'temperatur')
+  final double temperatur;
+  @override
+  @JsonKey(name: 'TimeStamp')
+  final String timestamp;
 
   @JsonKey(name: 'eventType')
   final String $type;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ServerEvent.serverSendsCurrentFountainstate(isOn: $isOn)';
+    return 'ServerEvent.serverSendsCurrentFountainstate(isOn: $isOn, temperatur: $temperatur, timestamp: $timestamp)';
   }
 
   @override
@@ -658,7 +689,9 @@ class _$ServerSendsCurrentFountainstateImpl
     properties
       ..add(DiagnosticsProperty(
           'type', 'ServerEvent.serverSendsCurrentFountainstate'))
-      ..add(DiagnosticsProperty('isOn', isOn));
+      ..add(DiagnosticsProperty('isOn', isOn))
+      ..add(DiagnosticsProperty('temperatur', temperatur))
+      ..add(DiagnosticsProperty('timestamp', timestamp));
   }
 
   @override
@@ -666,12 +699,16 @@ class _$ServerSendsCurrentFountainstateImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ServerSendsCurrentFountainstateImpl &&
-            (identical(other.isOn, isOn) || other.isOn == isOn));
+            (identical(other.isOn, isOn) || other.isOn == isOn) &&
+            (identical(other.temperatur, temperatur) ||
+                other.temperatur == temperatur) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, isOn);
+  int get hashCode => Object.hash(runtimeType, isOn, temperatur, timestamp);
 
   @JsonKey(ignore: true)
   @override
@@ -684,7 +721,10 @@ class _$ServerSendsCurrentFountainstateImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(@JsonKey(name: 'isOn') bool isOn)
+    required TResult Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') String timestamp)
         serverSendsCurrentFountainstate,
     required TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)
@@ -695,13 +735,16 @@ class _$ServerSendsCurrentFountainstateImpl
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsLogin,
   }) {
-    return serverSendsCurrentFountainstate(isOn);
+    return serverSendsCurrentFountainstate(isOn, temperatur, timestamp);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(@JsonKey(name: 'isOn') bool isOn)?
+    TResult? Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') String timestamp)?
         serverSendsCurrentFountainstate,
     TResult? Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
@@ -712,13 +755,16 @@ class _$ServerSendsCurrentFountainstateImpl
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
   }) {
-    return serverSendsCurrentFountainstate?.call(isOn);
+    return serverSendsCurrentFountainstate?.call(isOn, temperatur, timestamp);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(@JsonKey(name: 'isOn') bool isOn)?
+    TResult Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') String timestamp)?
         serverSendsCurrentFountainstate,
     TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
@@ -731,7 +777,7 @@ class _$ServerSendsCurrentFountainstateImpl
     required TResult orElse(),
   }) {
     if (serverSendsCurrentFountainstate != null) {
-      return serverSendsCurrentFountainstate(isOn);
+      return serverSendsCurrentFountainstate(isOn, temperatur, timestamp);
     }
     return orElse();
   }
@@ -786,14 +832,20 @@ class _$ServerSendsCurrentFountainstateImpl
 
 abstract class ServerSendsCurrentFountainstate implements ServerEvent {
   factory ServerSendsCurrentFountainstate(
-          {@JsonKey(name: 'isOn') required final bool isOn}) =
+          {@JsonKey(name: 'ison') required final bool isOn,
+          @JsonKey(name: 'temperatur') required final double temperatur,
+          @JsonKey(name: 'TimeStamp') required final String timestamp}) =
       _$ServerSendsCurrentFountainstateImpl;
 
   factory ServerSendsCurrentFountainstate.fromJson(Map<String, dynamic> json) =
       _$ServerSendsCurrentFountainstateImpl.fromJson;
 
-  @JsonKey(name: 'isOn')
+  @JsonKey(name: 'ison')
   bool get isOn;
+  @JsonKey(name: 'temperatur')
+  double get temperatur;
+  @JsonKey(name: 'TimeStamp')
+  String get timestamp;
   @JsonKey(ignore: true)
   _$$ServerSendsCurrentFountainstateImplCopyWith<
           _$ServerSendsCurrentFountainstateImpl>
@@ -903,7 +955,10 @@ class _$ServerConfirmsRegistrationImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(@JsonKey(name: 'isOn') bool isOn)
+    required TResult Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') String timestamp)
         serverSendsCurrentFountainstate,
     required TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)
@@ -920,7 +975,10 @@ class _$ServerConfirmsRegistrationImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(@JsonKey(name: 'isOn') bool isOn)?
+    TResult? Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') String timestamp)?
         serverSendsCurrentFountainstate,
     TResult? Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
@@ -937,7 +995,10 @@ class _$ServerConfirmsRegistrationImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(@JsonKey(name: 'isOn') bool isOn)?
+    TResult Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') String timestamp)?
         serverSendsCurrentFountainstate,
     TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
@@ -1130,7 +1191,10 @@ class _$ServerConfirmsLoginImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(@JsonKey(name: 'isOn') bool isOn)
+    required TResult Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') String timestamp)
         serverSendsCurrentFountainstate,
     required TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)
@@ -1147,7 +1211,10 @@ class _$ServerConfirmsLoginImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(@JsonKey(name: 'isOn') bool isOn)?
+    TResult? Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') String timestamp)?
         serverSendsCurrentFountainstate,
     TResult? Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
@@ -1164,7 +1231,10 @@ class _$ServerConfirmsLoginImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(@JsonKey(name: 'isOn') bool isOn)?
+    TResult Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') String timestamp)?
         serverSendsCurrentFountainstate,
     TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?

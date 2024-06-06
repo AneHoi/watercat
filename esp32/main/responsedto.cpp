@@ -10,12 +10,9 @@ std::string DeviceData::toJsonString() const {
     ss << "{\n";
     ss << "  \"DeviceId\": " << deviceId << ",\n";
     ss << "  \"Data\": {\n";
-    ss << "    \"Temperatures\": [\n";
-    serializeSensorArray(ss, data.Temperatures);
-    ss << "    ],\n";
-    ss << "    \"Motorstates\": [\n";
-    serializeSensorArray(ss, data.Motorstates);
-    ss << "    ],\n";
+    ss << "    \"DeviceData\": [\n";
+    serializeSensorArray(ss, data.DeviceData);
+    ss << "    ]\n";
     ss << "  }\n";
     ss << "}\n";
     return ss.str();
@@ -30,7 +27,8 @@ void DeviceData::serializeSensorArray(std::stringstream& ss, const std::vector<S
         }
         isFirst = false;
         ss << "      {\n";
-        ss << "        \"Value\": " << sensor.Value << ",\n";
+        ss << "        \"MotorValue\": " << sensor.MotorValue << ",\n";
+        ss << "        \"TemperatureValue\": " << sensor.TemperatureValue << ",\n";
         ss << "        \"TimeStamp\": \"" << sensor.TimeStamp << "\"\n";
         ss << "      }";
     }

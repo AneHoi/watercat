@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watercat/screens/small_widget_helpers/screenlayout.dart';
-import 'package:watercat/screens/small_widget_helpers/toggleswitch.dart';
 
 import '../bloc/homepagecubit.dart';
 import '../bloc/homepagestate.dart';
@@ -84,21 +83,22 @@ class _LoginToggleSwitchState extends State<LoginToggleSwitch> {
               ison = state.isOn;
             },
             builder: (context, state) {
-              return Switch(
-                // This bool value toggles the switch.
-                value: ison,
-                activeTrackColor: const Color.fromRGBO(89, 121, 238, 1.0),
-                activeColor: const Color.fromRGBO(255, 255, 255, 1.0),
+              return
+                  Switch(
+                    // This bool value toggles the switch.
+                    value: ison,
+                    activeTrackColor: const Color.fromRGBO(89, 121, 238, 1.0),
+                    activeColor: const Color.fromRGBO(255, 255, 255, 1.0),
 
-                inactiveTrackColor: const Color.fromRGBO(255, 255, 255, 1.0),
-                inactiveThumbColor: const Color.fromRGBO(0, 0, 0, 1.0),
-                onChanged: (bool value) async {
-                  bool result = await context.read<HomepageCubit>().getWaterfountainState();
-                  // This is called when the user toggles the switch.
-                  setState(() {
-                    ison = result;
-                  });
-                },
+                    inactiveTrackColor: const Color.fromRGBO(255, 255, 255, 1.0),
+                    inactiveThumbColor: const Color.fromRGBO(0, 0, 0, 1.0),
+                    onChanged: (bool value) async {
+                      bool result = await context.read<HomepageCubit>().getWaterfountainState();
+                      // This is called when the user toggles the switch.
+                      setState(() {
+                        ison = result;
+                      });
+                    },
               );
             }
         )

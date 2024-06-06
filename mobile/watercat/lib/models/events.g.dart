@@ -39,14 +39,18 @@ Map<String, dynamic> _$$ClientWantsCurrentFountainStateImplToJson(
 _$ServerSendsCurrentFountainstateImpl
     _$$ServerSendsCurrentFountainstateImplFromJson(Map<String, dynamic> json) =>
         _$ServerSendsCurrentFountainstateImpl(
-          isOn: json['isOn'] as bool,
+          isOn: json['ison'] as bool,
+          temperatur: (json['temperatur'] as num).toDouble(),
+          timestamp: json['TimeStamp'] as String,
           $type: json['eventType'] as String?,
         );
 
 Map<String, dynamic> _$$ServerSendsCurrentFountainstateImplToJson(
         _$ServerSendsCurrentFountainstateImpl instance) =>
     <String, dynamic>{
-      'isOn': instance.isOn,
+      'ison': instance.isOn,
+      'temperatur': instance.temperatur,
+      'TimeStamp': instance.timestamp,
       'eventType': instance.$type,
     };
 

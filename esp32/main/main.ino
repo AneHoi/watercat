@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>  // for string and to_string()
 #include <LiquidCrystal_I2C.h>
+#include <iostream>
+#include <ctime>
 
 #include "network_lib.h"
 #include "motor.h"
@@ -70,6 +72,7 @@ bool acceptableWaterstate = true;
 
 void setup() {
   Serial.begin(115200);
+  timeManager.begin();
   // initialize LCD
   lcd.init();
   // turn on LCD backlight
@@ -131,26 +134,14 @@ void loop() {
         statechanged("catfountain/waterstate", motor.ison());
       }
     }
-    Serial.print(currentMillis);
-    Serial.print("     ");
-    Serial.print(startMillis);
-    Serial.print("     ");
-    Serial.print(onTimeForMotor);
-    Serial.println("     ");
-    //If motor is turned on and, it has been for the value of onTimeForMotor, then turn off
-    if (currentMillis - startMillis >= onTimeForMotor && motor.ison()) {
-      motor.off();
-      statechanged("catfountain/activity", motor.ison());
-      // clears the display to print new message
-      lcd.clear();
-      startMillis = currentMillis;
-    }
-
-    //TODO remove later
-    switchstate = digitalRead(switchpin);
-    if (switchstate != stateChanged) {
-      //printCurrentState();
-    }
+  }
+  //If motor is turned on and, it has been for the value of onTimeForMotor, then turn off
+  if (currentMillis - startMillis >= onTimeForMotor && motor.ison()) {
+    motor.off();
+    statechanged("catfountain/activity", motor.ison());
+    // clears the display to print new message
+    lcd.clear();
+    startMillis = currentMillis;
   }
 }
 
@@ -164,17 +155,20 @@ void printToLCD(String message, int displaycolum) {
 void statechanged(const char* topic, bool isOn) {
   isMotorOnNow = isOn;
   std::string currentTime = timeManager.getCurrentTime();  //gets current real time
+  
   SensorDto temperatureReading;
-  temperatureReading.Value = tempC;
+  temperatureReading.MotorValue = isOn;
+  temperatureReading.TemperatureValue = tempC;
   temperatureReading.TimeStamp = currentTime;
   //Add the reading
-  readings.Temperatures.push_back(temperatureReading);
+  readings.DeviceData.push_back(temperatureReading);
 
   //Topic is ready, here we create the payload to send the object
   DeviceData deviceData(deviceId, readings);
   std::string jsonString = deviceData.toJsonString();
+
   //TODO remove later
-  Serial.println("");
+
   Serial.print("Sending from: ");
   Serial.print(topic);
   Serial.print(" payload: ");
@@ -182,22 +176,14 @@ void statechanged(const char* topic, bool isOn) {
   Serial.println("");
   sendDataToBroker(topic, jsonString.c_str());
   //clear all readings
-  readings.Temperatures.clear();
+  readings.DeviceData.clear();
+  
 }
 
 float getTempperatur() {
   DS18B20.requestTemperatures();       // send the command to get temperatures
   tempC = DS18B20.getTempCByIndex(0);  // read temperature in °C
   return tempC;
-}
-
-void printCurrentState() {
-  bool ison = motor.ison();
-  Serial.print("Distance: " + String(distSensor.measureDistanceInCM()) + " cm\t\t");
-  Serial.print("Motor state: " + String(ison));
-  Serial.print("\t\tTemperature: ");
-  Serial.print(String(getTempperatur()));  // print the temperature in °C
-  Serial.print("°C\n");
 }
 
 //For publishing

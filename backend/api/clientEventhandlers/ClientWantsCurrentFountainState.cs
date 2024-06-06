@@ -23,14 +23,16 @@ public class ClientWantsCurrentFountainState : BaseEventHandler<ClientWantsCurre
     
     public override Task Handle(ClientWantsCurrentFountainStateDto dto, IWebSocketConnection socket)
     {
-        //sends the JWT token to the client
+        //Gets the newest state from the database and sends to user
         WaterFountainstate state = _waterFountainService.getCurrentWaterFountainstate();
         
         Console.WriteLine(dto.email + " and state is: " + state.ison);
 
         socket.SendDto(new ServerSendsCurrentFountainstate
         {
-            isOn = state.ison
+            ison = state.ison,
+            temperatur = state.temperatur,
+            TimeStamp = state.TimeStamp
         });
         return Task.CompletedTask;
     }

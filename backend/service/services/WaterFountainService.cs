@@ -16,4 +16,9 @@ public class WaterFountainService
     {
         return _waterfountainRepository.getCurrentWaterFountainstate();
     }
+
+    public void addFountaindata(WaterFountainstate waterFountainstate)
+    {
+        _waterfountainRepository.setWaterFountainState(waterFountainstate);
+    }
 }

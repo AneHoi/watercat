@@ -4,7 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'events.freezed.dart';
 part 'events.g.dart';
-
+//When anything is updated run this in terminal:
+//dart run build_runner build
 interface class BaseEvent {}
 
 @Freezed(unionKey: 'eventType', unionValueCase: FreezedUnionCase.pascal)
@@ -27,7 +28,9 @@ sealed class ClientEvent with _$ClientEvent implements BaseEvent {
 sealed class ServerEvent with _$ServerEvent implements BaseEvent {
 
   factory ServerEvent.serverSendsCurrentFountainstate({
-    @JsonKey(name: 'isOn') required bool isOn
+    @JsonKey(name: 'ison') required bool isOn,
+    @JsonKey(name: 'temperatur') required double temperatur,
+    @JsonKey(name: 'TimeStamp') required String timestamp
 }) = ServerSendsCurrentFountainstate;
 
   factory ServerEvent.serverConfirmsRegistration({
