@@ -4,6 +4,10 @@
 #include <DallasTemperature.h>
 #include <iostream>
 #include <string>  // for string and to_string()
+#include <LiquidCrystal_I2C.h>
+#include <iostream>
+#include <ctime>
+
 #include "network_lib.h"
 #include "motor.h"
 #include "distancesensor.h"
@@ -12,6 +16,7 @@
 #define SOUND_SPEED 0.034
 
 const int switchpin = 4;
+const int waterpin = 36;
 
 int switchstate = 0;
 int stateChanged = 0;
@@ -21,6 +26,8 @@ float tempC;  // temperature in Celsius
 const int tempsensor = 13;
 OneWire oneWire(tempsensor);
 DallasTemperature DS18B20(&oneWire);
+float maxRuntemp = 30.0;
+bool acceptableTemp = true;
 
 //Wifi and broker connection
 const char* ssid = "Ane";
@@ -39,74 +46,138 @@ TimeManager timeManager(ssid, password);
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+unsigned long startMillis;
+unsigned long currentMillis;
+
 //The motor instance
+long onTimeForMotor = 10000;  //In milliseconds
 bool isMotorOnNow = false;
 const int motorpin = 12;
 Motor motor(motorpin);
 
 //The distance sensor
-float dist = 0;
 const int distSensorEcho = 14;
 const int distSensorTrig = 15;
 DistanceSensor distSensor(distSensorEcho, distSensorTrig);
 
+// set the LCD number of columns and rows
+int lcdColumns = 16;
+int lcdRows = 2;
+
+// set LCD address, number of columns and rows
+// if you don't know your display address, run an I2C scanner sketch
+LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);
+
+bool acceptableWaterstate = true;
+
 void setup() {
   Serial.begin(115200);
+  timeManager.begin();
+  // initialize LCD
+  lcd.init();
+  // turn on LCD backlight
+  lcd.backlight();
   pinMode(switchpin, INPUT_PULLUP);
-  DS18B20.begin();  // initialize the DS18B20 sensor
+  pinMode(waterpin, INPUT_PULLUP);
+  DS18B20.begin();         // initialize the DS18B20 sensor
+  startMillis = millis();  //initial start time
 }
 
 
 void loop() {
-  dist = distSensor.measureDistanceInCM();
-  while (dist < 5) {
-    motor.on();
-    if (motor.ison() != isMotorOnNow) {
-      statechanged("catfountain/waterstate", motor.ison());
+  //Keeps connection open, for incomming brokermessages
+  if (!client.connected()) {
+    connectToBroker();
+  }
+  client.loop();
+  //Make sure, there is water
+  if (digitalRead(waterpin) == HIGH) {
+    //Todo Send message to broker
+    if (acceptableWaterstate) {
+      lcd.clear();
+      acceptableWaterstate = false;
+      sendDataToBroker("catfountain/waterstate", "Not enough water");
+      printToLCD("Not enough water", 0);
     }
-    delay(5000);
-    dist = distSensor.measureDistanceInCM();
+    delay(500);
   }
-  motor.off();
-  if (motor.ison() != isMotorOnNow) {
-    statechanged("catfountain/waterstate", motor.ison());
+  //Make sure the water temp is not too high
+  else if (getTempperatur() > maxRuntemp) {
+    if (acceptableTemp) {
+      lcd.clear();
+      acceptableTemp = false;
+      sendDataToBroker("catfountain/waterstate", "Water is too hot");
+      printToLCD("Water is too hot", 0);
+    }
+    delay(500);
+    printToLCD(String(getTempperatur()), 1);
   }
 
-  switchstate = digitalRead(switchpin);
-  if (switchstate != stateChanged) {
-    printCurrentState();
-  }
-  checkForButtonPress();
-}
+  else {
+    if (!acceptableWaterstate) {
+      acceptableWaterstate = true;
+    }
+    if (!acceptableTemp) {
+      acceptableTemp = true;
+    }
+    lcd.clear();
 
-//For the button
-void checkForButtonPress() {
-  if (switchstate == HIGH) {
+    currentMillis = millis();  //get the current "time" (actually the number of milliseconds since the program started)
+    switchstate = digitalRead(switchpin);
+    //Monitor the cats distance to the device and listen for buttonpres
+    if (distSensor.measureDistanceInCM() < 5 || switchstate == LOW) {
+      motor.on();
+      startMillis = currentMillis;
+      if (motor.ison() != isMotorOnNow) {
+        printToLCD("Waterpump: on", 0);
+        printToLCD("Temp: " + String(getTempperatur()) + " C", 1);
+        statechanged("catfountain/waterstate", motor.ison());
+      }
+    }
+  }
+  //If motor is turned on and, it has been for the value of onTimeForMotor, then turn off
+  if (currentMillis - startMillis >= onTimeForMotor && motor.ison()) {
     motor.off();
-    delay(300);
-
-  } else {
-    motor.on();
-    delay(2000);
+    statechanged("catfountain/activity", motor.ison());
+    // clears the display to print new message
+    lcd.clear();
+    startMillis = currentMillis;
   }
 }
+
+void printToLCD(String message, int displaycolum) {
+  lcd.setCursor(0, displaycolum);
+  // print message to LCD
+  lcd.print(message);
+}
+
 
 void statechanged(const char* topic, bool isOn) {
+  isMotorOnNow = isOn;
   std::string currentTime = timeManager.getCurrentTime();  //gets current real time
+  
   SensorDto temperatureReading;
-  temperatureReading.Value = tempC;
+  temperatureReading.MotorValue = isOn;
+  temperatureReading.TemperatureValue = tempC;
   temperatureReading.TimeStamp = currentTime;
-  readings.Temperatures.push_back(temperatureReading);
-  //Just adding one more for testdata
-  SensorDto temperatureReadingto;
-  temperatureReadingto.Value = tempC;
-  temperatureReadingto.TimeStamp = currentTime;
-  readings.Temperatures.push_back(temperatureReadingto);
+  //Add the reading
+  readings.DeviceData.push_back(temperatureReading);
 
-  //Topic is ready, we create the payload to send the object
+  //Topic is ready, here we create the payload to send the object
   DeviceData deviceData(deviceId, readings);
   std::string jsonString = deviceData.toJsonString();
+
+  //TODO remove later
+
+  Serial.print("Sending from: ");
+  Serial.print(topic);
+  Serial.print(" payload: ");
+  Serial.print(jsonString.c_str());
+  Serial.println("");
   sendDataToBroker(topic, jsonString.c_str());
+  //clear all readings
+  readings.DeviceData.clear();
+  
 }
 
 float getTempperatur() {
@@ -115,54 +186,48 @@ float getTempperatur() {
   return tempC;
 }
 
-void printCurrentState() {
-  bool ison = motor.ison();
-  Serial.print("Distance: " + String(dist) + " cm\t\t");
-  Serial.print("State changed to " + String(ison));
-  String statest = "\t\tState changed to: " + String(switchstate);
-  client.publish("my/state", (char*)statest.c_str());
-  String temp = "Temperatur: " + String(getTempperatur()) + " ";
-  Serial.print("\t\tTemperature: ");
-  Serial.print(tempC);  // print the temperature in °C
-  Serial.print("°C\n");
-  client.publish("my/state", (char*)temp.c_str());
+//For publishing
+void sendDataToBroker(const char* topic, const char* payload) {
+  client.publish(topic, payload);
 }
 
-void brokerConnection() {
+void connectToBroker() {
+  // Ensure WiFi is connected
+  if (WiFi.status() != WL_CONNECTED) {
+    printToLCD("Connect to WiFi", 0);
+    connectWifi(ssid, password);
+    lcd.clear();
+  }
+
+  // Connect to the MQTT broker
   client.setServer(mqttServer, mqttPort);
+  client.setCallback(callback);
 
   while (!client.connected()) {
     Serial.println("Connecting to MQTT...");
 
     if (client.connect("ESP32Client", mqttUser, mqttPassword)) {
-
       Serial.println("connected");
 
-    } else {
+      //Setting the subscribe topic
+      client.subscribe("catfountain/clientrequests");
 
+    } else {
       Serial.print("failed with state ");
       Serial.print(client.state());
       delay(2000);
     }
-
-    client.publish("my/test", "Hello from ESP32");
   }
 }
 
+// For subscribing
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Message arrived [");
+  Serial.print(topic);
+  Serial.print("]: ");
 
-void sendDataToBroker(const char* topic, const char* payload) {
-  //TODO when there is no wifi just run
-  connectWifi(ssid, password);
-
-  client.setServer(mqttServer, mqttPort);  // Initialisering af MQTT-server og port
-
-  if (!client.connected()) {
-    brokerConnection();
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)payload[i]);
   }
-  client.publish(topic, payload);  //set max size in lib if needed
-  Serial.println("Dto Send");
-  Serial.println("");
-
-  WiFi.disconnect(true);
-  Serial.println("Disconnected from WiFi");
+  Serial.println();
 }

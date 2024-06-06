@@ -6,7 +6,7 @@ TimeManager::TimeManager(const char* ssid, const char* password)
 
 void TimeManager::begin() {
   // Connect to Wi-Fi
-  Serial.println("Connecting to WiFi...");
+  Serial.println("Connecting to WiFi...for time");
   WiFi.begin(_ssid, _password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -14,9 +14,13 @@ void TimeManager::begin() {
   }
   Serial.println("\nConnected to WiFi network");
 
-  //get time from NTP-server
+  // Initialize and update NTP client
   _timeClient.begin();
-  _timeClient.update();
+  if (_timeClient.update()) {
+    Serial.println("NTP time updated successfully");
+  } else {
+    Serial.println("Failed to update NTP time");
+  }
 
   // Disconnect Wi-Fi
   WiFi.disconnect(true);
@@ -24,17 +28,22 @@ void TimeManager::begin() {
 }
 
 std::string TimeManager::getCurrentTime() {
-  //Get current time
+  // Get current time
   time_t now = _timeClient.getEpochTime();
+
+  if (now == 0) {
+    Serial.println("Failed to get the current time from NTP");
+    return "1970-01-01 00:00:00";
+  }
 
   // Convert time to struct tm
   struct tm* timeinfo;
   timeinfo = localtime(&now);
+  
   // Create a buffer for the newly formatted timestamp
-
   char buffer[40];  // the buffer value is 40 to make sure it contains the formatted timestamp
 
-  // Formater timestamp
+  // Format timestamp
   strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
 
   // Convert buffer to std::string and return it

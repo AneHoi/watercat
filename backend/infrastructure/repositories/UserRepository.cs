@@ -240,7 +240,7 @@ public class UserRepository
                 SELECT Email
                 FROM Users
                 WHERE Id = @userId;
-            ";
+            "; 
             string updatedEmail = connection.QueryFirst<string>(query, new
             {
                 newEmail = newEmail, userId = userId, oldEmail = oldEmail,

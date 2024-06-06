@@ -5,21 +5,30 @@ namespace service.services;
 
 public class DeviceReadingsService
 {
-    public DeviceReadingsService()
+    private readonly WaterFountainService _waterFountainService;
+    public DeviceReadingsService(WaterFountainService waterFountainService)
     {
+        _waterFountainService = waterFountainService;
     }
 
-    public void CreateReadings(DeviceWaterData deviceReadingsDto)
+    public void CreateReadings(DeviceData deviceReadingsDto)
     {
         var deviceId = deviceReadingsDto.DeviceId;
         //TODO remove
         Console.WriteLine("recieved");
-        Console.WriteLine("Data: " + deviceReadingsDto.Data.Length);
+        //Console.WriteLine("Data: " + deviceReadingsDto.Data.Length);
 
-        if (deviceReadingsDto.Data.Any())
+        if (deviceReadingsDto.Data.DeviceData.Any())
         {
-            Console.WriteLine("Data: " + deviceReadingsDto.Data.Length);
-            //_humidityRepository.SaveHumidityList(deviceId, deviceReadingsDto.Data.Humidities
+            Console.WriteLine("Data: " + deviceReadingsDto.Data.DeviceData.Count);
+            
+            _waterFountainService.addFountaindata(new WaterFountainstate
+            {
+                deviceId = deviceReadingsDto.DeviceId,
+                ison = deviceReadingsDto.Data.DeviceData[0].MotorValue == 1 ? true : false,
+                temperatur = deviceReadingsDto.Data.DeviceData[0].TemperatureValue,
+                TimeStamp = deviceReadingsDto.Data.DeviceData[0].TimeStamp,
+            });
         }
         else
             throw new NullReferenceException("there is no humidity readings in dataset");

@@ -3,16 +3,14 @@
 
 public class SensorDto
 {
-    public double Value { get; set; }
+    public double MotorValue { get; set; }
+    public double TemperatureValue { get; set; }
     public string TimeStamp { get; set; }
 }
 
 public class DeviceReadingsDto
 {
-    public List<SensorDto> Temperatures { get; set; }
-    public List<SensorDto> Humidities { get; set; }
-    public List<SensorDto> Particles25 { get; set; }
-    public List<SensorDto> Particles100 { get; set; }
+    public List<SensorDto> DeviceData { get; set; }
 }
 
 public class DeviceData
@@ -26,3 +24,27 @@ public class DeviceWaterData
     public int DeviceId { get; set; }
     public string Data { get; set; }
 }
+/*
+{
+DeviceId : 1
+Data : Object
+{
+    DeviceData : Array [1]
+    [
+        0 : Object
+    {
+        MotorValue : 0
+        TemperatureValue : 22.625
+        TimeStamp : "2024-06-04 20:52:59"
+    }
+    ]
+}
+}
+*/
+
+/* Example JSON
+ {
+"DeviceId": 1,
+"Data": "hello"
+}
+*/

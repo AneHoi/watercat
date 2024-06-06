@@ -32,12 +32,12 @@ public static class Startup
         builder.Services.AddNpgsqlDataSource(Utilities.ProperlyFormattedConnectionString);
 
         builder.Services.AddSingleton(provider => Utilities.ProperlyFormattedConnectionString);
-        //builder.Services.AddSingleton(provider => new PasswordHashRepository(provider.GetService<NpgsqlDataSource>()));
-        //builder.Services.AddSingleton(provider => new UserRepository(provider.GetService<NpgsqlDataSource>()));
-        
+
+        builder.Services.AddSingleton<WaterfountainRepository>();
         builder.Services.AddSingleton<PasswordHashRepository>();
         builder.Services.AddSingleton<UserRepository>();
 
+        builder.Services.AddSingleton<WaterFountainService>();
         builder.Services.AddSingleton<AuthService>();
         builder.Services.AddSingleton<TokenService>();
         builder.Services.AddSingleton<NotificationService>();
