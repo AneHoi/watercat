@@ -14,7 +14,7 @@ public class ClientWantsToTurnOnFountain : BaseEventHandler<ClientWantsToTurnOnF
 {
     public override Task Handle(ClientWantsToTurnOnFountainDto dto, IWebSocketConnection socket)
     {
-        MqttClientSubscriber.sendRequestToTurnOnFountain(dto.requestTime);
+        MqttClientSubscriber.sendRequestToTurnOnFountain(1, dto.requestTime);
         socket.SendDto(new ServerConfirmRequestToTurnOn
         {
             message = "Request has been sent to device"

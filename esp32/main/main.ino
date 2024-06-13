@@ -15,6 +15,8 @@
 #include "timemanager.h"
 #define SOUND_SPEED 0.034
 
+const int deviceId = 1;
+
 const int switchpin = 4;
 const int waterpin = 36;
 
@@ -37,8 +39,10 @@ const int mqttPort = 1883;
 const char* mqttUser = "FlespiToken R7ioy0LLhLzMw0pAUsadQ5tH67LS44a4ne21Uc5g3x80x44t7WIyab0GQ9XkFuFP";
 const char* mqttPassword = "";
 
+//Make the subscribe toppic
+const std::string topic = "catfountain/clientrequests/" + std::to_string(deviceId);
+const char* subTopic = topic.c_str();
 
-const int deviceId = 1;
 DeviceReadingsDto readings;
 TimeManager timeManager(ssid, password);
 
@@ -243,7 +247,7 @@ void connectToBroker() {
       Serial.println("connected");
 
       //Setting the subscribe topic
-      client.subscribe("catfountain/clientrequests");
+      client.subscribe(subTopic);
 
     } else {
       Serial.print("failed with state ");

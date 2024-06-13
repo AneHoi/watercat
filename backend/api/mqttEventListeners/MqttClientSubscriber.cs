@@ -64,16 +64,6 @@ public class MqttClientSubscriber
                         }
                     );
                 }
-
-                //todo check for current listeners in state service and call relevant server to client handlers
-                var pongMessage = new MqttApplicationMessageBuilder()
-                    .WithTopic("response_topic") //todo do we want some confirm? 
-                    .WithPayload("yes we received the message, thank you very much, " +
-                                 "the websocket client(s) also has the data")
-                    .WithQualityOfServiceLevel(e.ApplicationMessage.QualityOfServiceLevel)
-                    .WithRetainFlag(e.ApplicationMessage.Retain)
-                    .Build();
-                await mqttClient.PublishAsync(pongMessage, CancellationToken.None);
             }
             catch (Exception exc)
             {
@@ -82,7 +72,7 @@ public class MqttClientSubscriber
         };
     }
 
-    public static async Task sendRequestToTurnOnFountain(int requestedTime)
+    public static async Task sendRequestToTurnOnFountain(int deviceId, int requestedTime)
     {
         Console.WriteLine("sending request");
         var mqttFactory = new MqttFactory();
@@ -97,7 +87,7 @@ public class MqttClientSubscriber
         await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
 
         var pongMessage = new MqttApplicationMessageBuilder()
-            .WithTopic("catfountain/clientrequests") //todo do we want some confirm? 
+            .WithTopic("catfountain/clientrequests/" + deviceId) //todo do we want some confirm? 
             .WithPayload(requestedTime + "")
             .Build();
         await mqttClient.PublishAsync(pongMessage, CancellationToken.None);
