@@ -108,7 +108,7 @@ class SettingContent extends StatelessWidget {
                 constraints: BoxConstraints(maxWidth: 800),
                 decoration: BoxDecoration(
                     border: Border.all(
-                      color: const Color.fromARGB(143, 217, 217, 217),
+                      color: getBoxColorLight(),
                     ),
                     color: boxColor,
                     borderRadius: const BorderRadius.all(Radius.circular(20))),

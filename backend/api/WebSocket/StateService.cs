@@ -23,7 +23,7 @@ public class WebSocketMetaData
 public static class StateService
 {
     //holds the connections
-    private static readonly Dictionary<Guid, WebSocketMetaData> _clients = new();
+    public static readonly Dictionary<Guid, WebSocketMetaData> _clients = new();
     
     //holds the device and the users that wants updates on that device
     private static readonly Dictionary<int, List<Guid>> _deviceToUser = new();

@@ -58,3 +58,17 @@ CREATE TABLE PasswordHash
     Algorithm VARCHAR(50)  NOT NULL,
     FOREIGN KEY (UserId) REFERENCES Users (Id)
 );
+
+--insert mock data
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,25.25,'2024-06-11 09:04:21');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,24.625,'2024-06-11 09:06:00');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,25.25,'2024-06-11 10:00:30');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,27.5,'2024-06-11 10:04:59');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,28.5,'2024-06-11 14:04:28');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,14.25,'2024-06-11 14:09:21');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,22.25,'2024-06-11 18:30:00');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,10.625,'2024-06-11 18:36:35');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,9.5,'2024-06-11 20:04:21');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,5.5,'2024-06-11 20:09:28');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,7.7,'2024-06-11 21:59:21');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,7.7,'2024-06-11 22:03:26');

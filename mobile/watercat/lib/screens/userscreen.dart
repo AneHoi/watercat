@@ -29,9 +29,9 @@ class UserContent extends StatelessWidget {
             constraints: BoxConstraints(maxWidth: 800),
             decoration: BoxDecoration(
                 border: Border.all(
-                  color: const Color.fromARGB(143, 217, 217, 217),
+                  color: getBoxColorLight(),
                 ),
-                color: const Color.fromARGB(143, 217, 217, 217),
+                color: getBoxColorLight(),
                 borderRadius: const BorderRadius.all(Radius.circular(40))),
             padding: const EdgeInsets.all(20.0),
             margin: const EdgeInsets.all(20.0),

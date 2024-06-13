@@ -72,11 +72,14 @@ bool acceptableWaterstate = true;
 
 void setup() {
   Serial.begin(115200);
-  timeManager.begin();
   // initialize LCD
   lcd.init();
   // turn on LCD backlight
   lcd.backlight();
+  printToLCD("Device on", 0);
+  printToLCD("Searching Wifi", 1);
+
+  timeManager.begin();
   pinMode(switchpin, INPUT_PULLUP);
   pinMode(waterpin, INPUT_PULLUP);
   DS18B20.begin();         // initialize the DS18B20 sensor
@@ -90,8 +93,13 @@ void loop() {
     connectToBroker();
   }
   client.loop();
+
+
   //Make sure, there is water
   if (digitalRead(waterpin) == HIGH) {
+    if (motor.ison()) {
+      turnOffMotor();
+    }
     //Todo Send message to broker
     if (acceptableWaterstate) {
       lcd.clear();
@@ -103,6 +111,9 @@ void loop() {
   }
   //Make sure the water temp is not too high
   else if (getTempperatur() > maxRuntemp) {
+    if (motor.ison()) {
+      turnOffMotor();
+    }
     if (acceptableTemp) {
       lcd.clear();
       acceptableTemp = false;
@@ -111,40 +122,62 @@ void loop() {
     }
     delay(500);
     printToLCD(String(getTempperatur()), 1);
+  } else if (getTempperatur() < -30.0) {
+    if (motor.ison()) {
+      turnOffMotor();
+    }
+    if (acceptableTemp) {
+      lcd.clear();
+      acceptableTemp = false;
+      sendDataToBroker("catfountain/waterstate", "Temperature sensor failiure");
+      printToLCD("Temperature sensor failiure", 0);
+    }
+    delay(500);
+    printToLCD(String(getTempperatur()), 1);
   }
 
   else {
     if (!acceptableWaterstate) {
+      lcd.clear();
       acceptableWaterstate = true;
     }
     if (!acceptableTemp) {
+      lcd.clear();
       acceptableTemp = true;
     }
-    lcd.clear();
 
-    currentMillis = millis();  //get the current "time" (actually the number of milliseconds since the program started)
     switchstate = digitalRead(switchpin);
     //Monitor the cats distance to the device and listen for buttonpres
+
     if (distSensor.measureDistanceInCM() < 5 || switchstate == LOW) {
-      motor.on();
-      startMillis = currentMillis;
-      if (motor.ison() != isMotorOnNow) {
-        printToLCD("Waterpump: on", 0);
-        printToLCD("Temp: " + String(getTempperatur()) + " C", 1);
-        statechanged("catfountain/waterstate", motor.ison());
-      }
+      turnOnMotor();
     }
   }
+  currentMillis = millis();  //get the current "time" (The number of milliseconds since the program started)
+
   //If motor is turned on and, it has been for the value of onTimeForMotor, then turn off
   if (currentMillis - startMillis >= onTimeForMotor && motor.ison()) {
-    motor.off();
-    statechanged("catfountain/activity", motor.ison());
-    // clears the display to print new message
-    lcd.clear();
-    startMillis = currentMillis;
+    turnOffMotor();
   }
 }
-
+void turnOffMotor() {
+  motor.off();
+  lcd.clear();
+  printToLCD("Waterpump: off", 0);
+  printToLCD("Temp: " + String(getTempperatur()) + " C", 1);
+  statechanged("catfountain/waterstate", motor.ison());
+  startMillis = currentMillis;
+}
+void turnOnMotor() {
+  motor.on();
+  startMillis = currentMillis;
+  if (motor.ison() != isMotorOnNow) {
+    lcd.clear();
+    printToLCD("Waterpump: on", 0);
+    printToLCD("Temp: " + String(getTempperatur()) + " C", 1);
+    statechanged("catfountain/waterstate", motor.ison());
+  }
+}
 void printToLCD(String message, int displaycolum) {
   lcd.setCursor(0, displaycolum);
   // print message to LCD
@@ -155,7 +188,7 @@ void printToLCD(String message, int displaycolum) {
 void statechanged(const char* topic, bool isOn) {
   isMotorOnNow = isOn;
   std::string currentTime = timeManager.getCurrentTime();  //gets current real time
-  
+
   SensorDto temperatureReading;
   temperatureReading.MotorValue = isOn;
   temperatureReading.TemperatureValue = tempC;
@@ -177,7 +210,6 @@ void statechanged(const char* topic, bool isOn) {
   sendDataToBroker(topic, jsonString.c_str());
   //clear all readings
   readings.DeviceData.clear();
-  
 }
 
 float getTempperatur() {
@@ -194,6 +226,7 @@ void sendDataToBroker(const char* topic, const char* payload) {
 void connectToBroker() {
   // Ensure WiFi is connected
   if (WiFi.status() != WL_CONNECTED) {
+    lcd.clear();
     printToLCD("Connect to WiFi", 0);
     connectWifi(ssid, password);
     lcd.clear();
@@ -226,8 +259,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print(topic);
   Serial.print("]: ");
 
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
+  // Convert byte* to char*
+  char* str = reinterpret_cast<char*>(payload);
+
+  // Convert the string to an integer using std::atoi
+  int secunds = std::atoi(str);
+  Serial.print(secunds);
+  onTimeForMotor = secunds * 1000;
+  turnOnMotor();
+  Serial.print("turned");
 }
