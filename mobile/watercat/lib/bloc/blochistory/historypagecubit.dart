@@ -9,27 +9,12 @@ import 'historystate.dart';
 
 class HistoryPageCubit extends Cubit<HistoryState> {
   HistoryPageCubit(this.channel) : super(HistoryState.empty()) {
-    initializeListener();
     getWaterFountainHistory();
   }
 
   final BroadcastWsChannel channel;
 
-  //Subscription, that helps listen to incoming messages from backend
-  late StreamSubscription _subscription;
 
-  void initializeListener() {
-    _subscription = channel.stream.listen((event) {
-      final serverEvent = ServerEvent.fromJson(jsonDecode(event));
-      if (serverEvent is ServerSendsHistory) {
-        print('recieved history');
-        emit(state.copyWith(
-            temperatureReadings: serverEvent.tempReadings,
-            onTimeReadings: serverEvent.onTimeReadings
-        ));
-      }
-    });
-  }
   getWaterFountainHistory() async {
     final event = ClientEvent.clientWantsHistory();
 

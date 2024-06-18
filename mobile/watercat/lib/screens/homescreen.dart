@@ -51,7 +51,7 @@ class _HomeContent extends State<HomeContent> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          child: Text(appTitle, style: TextStyle(fontSize: 30)),
+          child: Text(appTitle, style: TextStyle(fontSize: 30, color: ison ? Colors.black : Colors.white)),
         ),
         Container(
             constraints: BoxConstraints(minWidth: 50, maxWidth: 300),
@@ -76,11 +76,11 @@ class _HomeContent extends State<HomeContent> {
             Row(
               children: [
                 Icon(Icons.access_time),
-                Text(getStateText(state)),
+                Text(getStateText(state), style: TextStyle(color: ison ? Colors.black : Colors.white),),
               ],
             ),
             Row(
-              children: [Icon(Icons.thermostat), Text(getTempStateText(state))],
+              children: [Icon(Icons.thermostat), Text(getTempStateText(state), style: TextStyle(color: ison ? Colors.black : Colors.white),)],
             )
           ],
         )

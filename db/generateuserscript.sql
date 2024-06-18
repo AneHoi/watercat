@@ -59,16 +59,21 @@ CREATE TABLE PasswordHash
     FOREIGN KEY (UserId) REFERENCES Users (Id)
 );
 
+DELETE FROM HistoryStateTable WHERE DeviceId = 1;
 --insert mock data
-INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,25.25,'2024-06-11 09:04:21');
-INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,24.625,'2024-06-11 09:06:00');
-INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,25.25,'2024-06-11 10:00:30');
-INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,27.5,'2024-06-11 10:04:59');
-INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,28.5,'2024-06-11 14:04:28');
-INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,14.25,'2024-06-11 14:09:21');
-INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,22.25,'2024-06-11 18:30:00');
-INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,10.625,'2024-06-11 18:36:35');
-INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,9.5,'2024-06-11 20:04:21');
-INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,5.5,'2024-06-11 20:09:28');
-INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,7.7,'2024-06-11 21:59:21');
-INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,7.7,'2024-06-11 22:03:26');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,25.25,  '2024-06-10 09:04:21');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,24.65, '2024-06-10 09:06:00');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,25.25,  '2024-06-11 10:00:30');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,27.5,  '2024-06-11 10:04:59');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,28.5,   '2024-06-12 14:04:28');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,14.25, '2024-06-12 14:09:21');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,22.25,  '2024-06-13 18:30:00');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,10.62, '2024-06-13 18:36:35');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,9.5,    '2024-06-14 20:04:21');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,5.5,   '2024-06-14 20:09:28');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,7.7,    '2024-06-15 21:59:21');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,7.7,   '2024-06-15 22:03:26');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,5.7,   '2024-06-16 21:03:26');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,4.7,   '2024-06-16 21:10:26');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,true,18.7,   '2024-06-17 10:30:26');
+INSERT INTO HistoryStateTable(DeviceId, isOn, temperatur, timestamp) VALUES (1,false,18.7,   '2024-06-17 10:35:36');

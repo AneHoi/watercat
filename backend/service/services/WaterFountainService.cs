@@ -26,8 +26,11 @@ public class WaterFountainService
     {
         FountainHistory fountainHistory = new FountainHistory();
         var historyTimeList = new List<Reading>();
+        var historyTimeListReturnObject = new List<Reading>();
         var historyOnTime = _waterfountainRepository.getHistoryOnTime(deviceId);
+        
         //takes in the times it has been turned on and off and calculates, how long it has been on
+        
         foreach (var onTimes in historyOnTime)
         {
             historyTimeList.Add(new Reading
@@ -35,9 +38,25 @@ public class WaterFountainService
                 value = onTimes.isOn ? 1.0 : 0.0,
                 timestamp = onTimes.timestamp
             });
-            Console.WriteLine(onTimes.timestamp + " isOn: " + onTimes.isOn);
         }
+        
+        for (int i = 0; i < historyTimeList.Count(); i++)
+        {
+            //If turned on, start counting time until off time
+            if (historyTimeList.Count() > i + 1)
+            {
+                if (historyTimeList[i].value == 1.0 && historyTimeList[i + 1].value == 0.0)
+                {
+                    double onTime = calculateTimediff(historyTimeList[i].timestamp, historyTimeList[i + 1].timestamp);
+                    historyTimeListReturnObject.Add(new Reading
+                    {
+                        value = onTime,
+                        timestamp = historyTimeList[i].timestamp
+                    });
+                }
+            }
 
+        }
         var historyTemperatures = new List<Reading>();
         var historyOnTemperatures = _waterfountainRepository.GetHistoryTemperature(deviceId);
         //takes in the times it has been turned on and off and calculates, how long it has been on
@@ -48,11 +67,41 @@ public class WaterFountainService
                 value = temperatures.temperatur, 
                 timestamp = temperatures.timestamp
             });
-            Console.WriteLine("temperature: " + temperatures.temperatur);
         }
         
-        fountainHistory.onTimeReadings = historyTimeList;
-        fountainHistory.tempReadings = historyTemperatures;
+        fountainHistory.onTimeReadings = calculateTotalDailyTime(historyTimeListReturnObject);
+        fountainHistory.tempReadings = calculateDailyAverage(historyTemperatures);
         return fountainHistory;
+    }
+
+    private List<Reading> calculateTotalDailyTime(List<Reading> historyTime)
+    {
+        var totals = historyTime.GroupBy(r => r.timestamp.Date)
+            .Select(group => new Reading
+            {
+                timestamp = group.Key,
+                value = group.Sum(r => r.value)
+            }).ToList();
+        return totals;
+    }
+
+    public List<Reading> calculateDailyAverage(List<Reading> data)
+    {
+        var average = data
+            .GroupBy(r => r.timestamp.Date)
+            .Select(group => new Reading
+            {
+                timestamp = group.Key,
+                value = group.Average(r => r.value)
+            })
+            .ToList();
+
+        return average;
+    }
+
+    private int calculateTimediff(DateTime firstTimestamp, DateTime secondTimestamp)
+    {
+        TimeSpan onTime = firstTimestamp - secondTimestamp;
+        return onTime.Seconds;
     }
 }

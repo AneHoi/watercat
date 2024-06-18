@@ -57,10 +57,23 @@ sealed class ServerEvent with _$ServerEvent implements BaseEvent {
   }) = ServerConfirmsLogin;
 
   factory ServerEvent.serverSendsHistory({
-    @JsonKey(name: 'tempReadings') required List<Object> tempReadings,
-    @JsonKey(name: 'onTimeReadings') required List<Object> onTimeReadings
+    @JsonKey(name: 'tempReadings') required List<Reading> tempReadings,
+    @JsonKey(name: 'onTimeReadings') required List<Reading> onTimeReadings
   }) = ServerSendsHistory;
 
   factory ServerEvent.fromJson(Map<String, dynamic> json) =>
       _$ServerEventFromJson(json);
+}
+
+@JsonSerializable()
+class Reading {
+  late final double value;
+  late final DateTime timestamp;
+
+  Reading({required this.value, required this.timestamp});
+
+  factory Reading.fromJson(Map<String, dynamic> json) =>
+      _$ReadingFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ReadingToJson(this);
 }

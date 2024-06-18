@@ -6,6 +6,16 @@ part of 'events.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+Reading _$ReadingFromJson(Map<String, dynamic> json) => Reading(
+      value: (json['value'] as num).toDouble(),
+      timestamp: DateTime.parse(json['timestamp'] as String),
+    );
+
+Map<String, dynamic> _$ReadingToJson(Reading instance) => <String, dynamic>{
+      'value': instance.value,
+      'timestamp': instance.timestamp.toIso8601String(),
+    };
+
 _$ClientWantsToLogInImpl _$$ClientWantsToLogInImplFromJson(
         Map<String, dynamic> json) =>
     _$ClientWantsToLogInImpl(
@@ -130,10 +140,10 @@ _$ServerSendsHistoryImpl _$$ServerSendsHistoryImplFromJson(
         Map<String, dynamic> json) =>
     _$ServerSendsHistoryImpl(
       tempReadings: (json['tempReadings'] as List<dynamic>)
-          .map((e) => e as Object)
+          .map((e) => Reading.fromJson(e as Map<String, dynamic>))
           .toList(),
       onTimeReadings: (json['onTimeReadings'] as List<dynamic>)
-          .map((e) => e as Object)
+          .map((e) => Reading.fromJson(e as Map<String, dynamic>))
           .toList(),
       $type: json['eventType'] as String?,
     );

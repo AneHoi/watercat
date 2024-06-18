@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:watercat/screens/historyscreen.dart';
 
 import 'broardcastwschannel.dart';
-
+import 'screens/homescreen.dart';
 
 void main() {
   Uri wsUrl;
@@ -34,8 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      //home: const HomeScreen(),
-      home: const HistoryScreen(),
+      home: const HomeScreen(),
     );
   }
 }

@@ -889,8 +889,8 @@ mixin _$ServerEvent {
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsLogin,
     required TResult Function(
-            @JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)
+            @JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)
         serverSendsHistory,
   }) =>
       throw _privateConstructorUsedError;
@@ -911,8 +911,8 @@ mixin _$ServerEvent {
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
-    TResult? Function(@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)?
+    TResult? Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
         serverSendsHistory,
   }) =>
       throw _privateConstructorUsedError;
@@ -933,8 +933,8 @@ mixin _$ServerEvent {
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
-    TResult Function(@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)?
+    TResult Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
         serverSendsHistory,
     required TResult orElse(),
   }) =>
@@ -1132,8 +1132,8 @@ class _$ServerSendsCurrentFountainstateImpl
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsLogin,
     required TResult Function(
-            @JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)
+            @JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)
         serverSendsHistory,
   }) {
     return serverSendsCurrentFountainstate(isOn, temperatur, timestamp);
@@ -1157,8 +1157,8 @@ class _$ServerSendsCurrentFountainstateImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
-    TResult? Function(@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)?
+    TResult? Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
         serverSendsHistory,
   }) {
     return serverSendsCurrentFountainstate?.call(isOn, temperatur, timestamp);
@@ -1182,8 +1182,8 @@ class _$ServerSendsCurrentFountainstateImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
-    TResult Function(@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)?
+    TResult Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
         serverSendsHistory,
     required TResult orElse(),
   }) {
@@ -1378,8 +1378,8 @@ class _$ServerConfirmRequestToTurnOnImpl
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsLogin,
     required TResult Function(
-            @JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)
+            @JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)
         serverSendsHistory,
   }) {
     return ServerConfirmRequestToTurnOn(message);
@@ -1403,8 +1403,8 @@ class _$ServerConfirmRequestToTurnOnImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
-    TResult? Function(@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)?
+    TResult? Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
         serverSendsHistory,
   }) {
     return ServerConfirmRequestToTurnOn?.call(message);
@@ -1428,8 +1428,8 @@ class _$ServerConfirmRequestToTurnOnImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
-    TResult Function(@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)?
+    TResult Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
         serverSendsHistory,
     required TResult orElse(),
   }) {
@@ -1631,8 +1631,8 @@ class _$ServerConfirmsRegistrationImpl
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsLogin,
     required TResult Function(
-            @JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)
+            @JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)
         serverSendsHistory,
   }) {
     return serverConfirmsRegistration(message, userId);
@@ -1656,8 +1656,8 @@ class _$ServerConfirmsRegistrationImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
-    TResult? Function(@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)?
+    TResult? Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
         serverSendsHistory,
   }) {
     return serverConfirmsRegistration?.call(message, userId);
@@ -1681,8 +1681,8 @@ class _$ServerConfirmsRegistrationImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
-    TResult Function(@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)?
+    TResult Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
         serverSendsHistory,
     required TResult orElse(),
   }) {
@@ -1892,8 +1892,8 @@ class _$ServerConfirmsLoginImpl
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsLogin,
     required TResult Function(
-            @JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)
+            @JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)
         serverSendsHistory,
   }) {
     return serverConfirmsLogin(message, token, userId);
@@ -1917,8 +1917,8 @@ class _$ServerConfirmsLoginImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
-    TResult? Function(@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)?
+    TResult? Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
         serverSendsHistory,
   }) {
     return serverConfirmsLogin?.call(message, token, userId);
@@ -1942,8 +1942,8 @@ class _$ServerConfirmsLoginImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
-    TResult Function(@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)?
+    TResult Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
         serverSendsHistory,
     required TResult orElse(),
   }) {
@@ -2038,8 +2038,8 @@ abstract class _$$ServerSendsHistoryImplCopyWith<$Res> {
       __$$ServerSendsHistoryImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-      @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings});
+      {@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+      @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings});
 }
 
 /// @nodoc
@@ -2060,11 +2060,11 @@ class __$$ServerSendsHistoryImplCopyWithImpl<$Res>
       tempReadings: null == tempReadings
           ? _value._tempReadings
           : tempReadings // ignore: cast_nullable_to_non_nullable
-              as List<Object>,
+              as List<Reading>,
       onTimeReadings: null == onTimeReadings
           ? _value._onTimeReadings
           : onTimeReadings // ignore: cast_nullable_to_non_nullable
-              as List<Object>,
+              as List<Reading>,
     ));
   }
 }
@@ -2075,9 +2075,9 @@ class _$ServerSendsHistoryImpl
     with DiagnosticableTreeMixin
     implements ServerSendsHistory {
   _$ServerSendsHistoryImpl(
-      {@JsonKey(name: 'tempReadings') required final List<Object> tempReadings,
+      {@JsonKey(name: 'tempReadings') required final List<Reading> tempReadings,
       @JsonKey(name: 'onTimeReadings')
-      required final List<Object> onTimeReadings,
+      required final List<Reading> onTimeReadings,
       final String? $type})
       : _tempReadings = tempReadings,
         _onTimeReadings = onTimeReadings,
@@ -2086,19 +2086,19 @@ class _$ServerSendsHistoryImpl
   factory _$ServerSendsHistoryImpl.fromJson(Map<String, dynamic> json) =>
       _$$ServerSendsHistoryImplFromJson(json);
 
-  final List<Object> _tempReadings;
+  final List<Reading> _tempReadings;
   @override
   @JsonKey(name: 'tempReadings')
-  List<Object> get tempReadings {
+  List<Reading> get tempReadings {
     if (_tempReadings is EqualUnmodifiableListView) return _tempReadings;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_tempReadings);
   }
 
-  final List<Object> _onTimeReadings;
+  final List<Reading> _onTimeReadings;
   @override
   @JsonKey(name: 'onTimeReadings')
-  List<Object> get onTimeReadings {
+  List<Reading> get onTimeReadings {
     if (_onTimeReadings is EqualUnmodifiableListView) return _onTimeReadings;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_onTimeReadings);
@@ -2165,8 +2165,8 @@ class _$ServerSendsHistoryImpl
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsLogin,
     required TResult Function(
-            @JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)
+            @JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)
         serverSendsHistory,
   }) {
     return serverSendsHistory(tempReadings, onTimeReadings);
@@ -2190,8 +2190,8 @@ class _$ServerSendsHistoryImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
-    TResult? Function(@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)?
+    TResult? Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
         serverSendsHistory,
   }) {
     return serverSendsHistory?.call(tempReadings, onTimeReadings);
@@ -2215,8 +2215,8 @@ class _$ServerSendsHistoryImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
-    TResult Function(@JsonKey(name: 'tempReadings') List<Object> tempReadings,
-            @JsonKey(name: 'onTimeReadings') List<Object> onTimeReadings)?
+    TResult Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
         serverSendsHistory,
     required TResult orElse(),
   }) {
@@ -2285,17 +2285,17 @@ class _$ServerSendsHistoryImpl
 
 abstract class ServerSendsHistory implements ServerEvent {
   factory ServerSendsHistory(
-      {@JsonKey(name: 'tempReadings') required final List<Object> tempReadings,
+      {@JsonKey(name: 'tempReadings') required final List<Reading> tempReadings,
       @JsonKey(name: 'onTimeReadings')
-      required final List<Object> onTimeReadings}) = _$ServerSendsHistoryImpl;
+      required final List<Reading> onTimeReadings}) = _$ServerSendsHistoryImpl;
 
   factory ServerSendsHistory.fromJson(Map<String, dynamic> json) =
       _$ServerSendsHistoryImpl.fromJson;
 
   @JsonKey(name: 'tempReadings')
-  List<Object> get tempReadings;
+  List<Reading> get tempReadings;
   @JsonKey(name: 'onTimeReadings')
-  List<Object> get onTimeReadings;
+  List<Reading> get onTimeReadings;
   @JsonKey(ignore: true)
   _$$ServerSendsHistoryImplCopyWith<_$ServerSendsHistoryImpl> get copyWith =>
       throw _privateConstructorUsedError;

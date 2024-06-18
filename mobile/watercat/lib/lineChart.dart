@@ -1,145 +1,171 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import 'bloc/blochistory/historystate.dart';
+import 'models/events.dart';
 
 class HistoryChart extends StatelessWidget {
-  const HistoryChart({required this.isShowingTempData, required this.datasetTemp, required this.datasetOnTime});
+  const HistoryChart(
+      {super.key,
+      required this.isShowingTempData,
+      required this.datasetTemp,
+      required this.datasetOnTime});
 
   final bool isShowingTempData;
   final List<Reading> datasetTemp;
   final List<Reading> datasetOnTime;
 
-
   @override
   Widget build(BuildContext context) {
-    return LineChart(
-      isShowingTempData ? temperaturData : fountainOnTime,
-      duration: const Duration(milliseconds: 500),
-    );
+    if (isShowingTempData) {
+      return LineChart(
+        temperatureData,
+        duration: const Duration(milliseconds: 500),
+      );
+    } else {
+      return BarChart(fountainOnTime);
+    }
   }
 
-  LineChartData get temperaturData => LineChartData(
+  //_________________________________________Chart for Temperature____________________________________________
+  LineChartData get temperatureData => LineChartData(
         lineTouchData: lineTouchData,
-        gridData: gridData,
-        titlesData: titlesData1,
+        gridData: const FlGridData(show: true),
+        titlesData: titleData(true),
         borderData: borderData,
-        lineBarsData: lineBarsData1,
+        //Data for the chart
+        lineBarsData: [temperatureChart],
       );
 
-  LineChartData get fountainOnTime => LineChartData(
-        lineTouchData: lineTouchData,
-        gridData: gridData,
-        titlesData: titlesData2,
-        borderData: borderData,
-        lineBarsData: lineBarsData2,
-      );
-
+  //When mouse is hovering or chart is touched
   LineTouchData get lineTouchData => LineTouchData(
         handleBuiltInTouches: true,
         touchTooltipData: LineTouchTooltipData(
-          getTooltipColor: (touchedSpot) => Colors.blueGrey.withOpacity(0.8),
+          getTooltipColor: (touchedSpot) => Colors.black.withOpacity(0.8),
         ),
       );
 
-  FlTitlesData get titlesData1 => FlTitlesData(
-        bottomTitles: AxisTitles(
-          sideTitles: bottomTitles,
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: leftTitles(),
+  LineChartBarData get temperatureChart => LineChartBarData(
+        isCurved: true,
+        preventCurveOverShooting: false,
+        curveSmoothness: 0.35,
+        gradient: const LinearGradient(colors: [
+          Color.fromRGBO(255, 1, 1, 1.0),
+          Color.fromRGBO(170, 70, 130, 1.0),
+          Color.fromRGBO(68, 96, 207, 1.0)
+        ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+        barWidth: 4,
+        isStrokeCapRound: true,
+        dotData: const FlDotData(show: false),
+        belowBarData: BarAreaData(show: false),
+        spots: spotsTemperature(),
+      );
+
+  List<FlSpot> spotsTemperature() {
+    List<FlSpot> flSpots = [];
+
+    for (var reading in datasetTemp) {
+      double time = reading.timestamp.day.toDouble() +
+          reading.timestamp.hour.toDouble() / 24;
+      double xValue = double.parse((time).toStringAsFixed(1));
+      double point = double.parse(
+          (xValue + reading.timestamp.minute.toDouble() / 60 / 10)
+              .toStringAsFixed(3));
+      flSpots.add(FlSpot(point, double.parse((reading.value).toStringAsFixed(2))));
+      //print("Point: " + point.toString() + " val: " + reading.value.toString());
+    }
+
+    return flSpots;
+  }
+
+  //_________________________________________Chart for fountain on time____________________________________________
+
+  BarChartData get fountainOnTime => BarChartData(
+        barTouchData: barTouchData,
+        gridData: const FlGridData(show: true),
+        titlesData: titleData(false),
+        borderData: borderData,
+        alignment: BarChartAlignment.spaceAround,
+        barGroups: onTimeData(),
+      );
+
+  BarTouchData get barTouchData => BarTouchData(
+        handleBuiltInTouches: true,
+        touchTooltipData: BarTouchTooltipData(
+          getTooltipColor: (_) => Colors.black.withOpacity(0.8),
         ),
       );
 
-  List<LineChartBarData> get lineBarsData1 => [
-        lineChartBarData1_1,
-      ];
+  List<BarChartGroupData> onTimeData() {
+    List<BarChartGroupData> bars = [];
+    for (int i = datasetOnTime.length-1; i >= 0; i--) {
+      int time = datasetOnTime[i].timestamp.day.toInt();
+      var bar = BarChartGroupData(x: time, barRods: [
+        BarChartRodData(toY: double.parse((datasetOnTime[i].value / 60).toStringAsFixed(1)), gradient: _barsGradient)
+      ],
+      );
+      bars.add(bar);
+    }
+    return bars;
+  }
 
-  LineTouchData get lineTouchData2 => const LineTouchData(
-        enabled: false,
+  LinearGradient get _barsGradient => const LinearGradient(
+        colors: [
+          Color.fromRGBO(0, 101, 255, 1.0),
+          Color.fromRGBO(177, 205, 248, 1.0),
+        ],
+        begin: Alignment.bottomCenter,
+        end: Alignment.topCenter,
       );
 
-  FlTitlesData get titlesData2 => FlTitlesData(
-        bottomTitles: AxisTitles(
-          sideTitles: bottomTitles,
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: leftTitles(),
-        ),
-      );
+  //_________________________________________Commons for Charts____________________________________________
+  FlTitlesData titleData(bool temp) {
+    return FlTitlesData(
+      bottomTitles: AxisTitles(
+        sideTitles: bottomTitles,
+      ),
+      rightTitles: const AxisTitles(
+        sideTitles: SideTitles(showTitles: false),
+      ),
+      topTitles: const AxisTitles(
+        sideTitles: SideTitles(showTitles: false),
+      ),
+      leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            getTitlesWidget: leftTitleWidgetsValues,
+            showTitles: true,
+            reservedSize: 40,
+          )
+      ),
+    );
+  }
 
-  List<LineChartBarData> get lineBarsData2 => [
-        lineChartBarData2_1,
-      ];
-
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
+  //Y-axis Values
+  Widget leftTitleWidgetsValues(double value, TitleMeta meta) {
     const style = TextStyle(
+      color: Colors.white,
       fontWeight: FontWeight.bold,
       fontSize: 14,
     );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '1m';
-        break;
-      case 2:
-        text = '2m';
-        break;
-      case 3:
-        text = '3m';
-        break;
-      case 4:
-        text = '5m';
-        break;
-      case 5:
-        text = '6m';
-        break;
-      default:
-        return Container();
-    }
-
+    String text =
+        isShowingTempData ? "${value.toInt()} C " : "${value.toInt()} min";
     return Text(text, style: style, textAlign: TextAlign.center);
   }
 
-  SideTitles leftTitles() => SideTitles(
-        getTitlesWidget: leftTitleWidgets,
+  //Bottom values
+  SideTitles get bottomTitles => SideTitles(
         showTitles: true,
-        interval: 1,
-        reservedSize: 40,
+        reservedSize: 32,
+        getTitlesWidget: bottomTitleWidgets,
       );
 
+  //X-axis Values
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
+      color: Colors.white,
       fontWeight: FontWeight.bold,
       fontSize: 16,
     );
-    Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = const Text('Mon', style: style);
-        break;
-      case 7:
-        text = const Text('Tue', style: style);
-        break;
-      case 12:
-        text = const Text('Wed', style: style);
-        break;
-      default:
-        text = const Text('');
-        break;
-    }
+    Widget text = Text(value.toInt().toString(), style: style);
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
@@ -148,125 +174,13 @@ class HistoryChart extends StatelessWidget {
     );
   }
 
-  SideTitles get bottomTitles => SideTitles(
-        showTitles: true,
-        reservedSize: 32,
-        interval: 1,
-        getTitlesWidget: bottomTitleWidgets,
-      );
-
-  FlGridData get gridData => const FlGridData(show: true);
-
+  //Data on the decoration of the borders for the charts
   FlBorderData get borderData => FlBorderData(
-        show: true,
-        border: Border(
-          bottom: BorderSide(color: Color.fromRGBO(255, 219, 219, 1.0), width: 4),
-          left: BorderSide(color: Color.fromRGBO(255, 219, 219, 1.0), width: 4),
-          right: const BorderSide(color: Colors.transparent),
-          top: const BorderSide(color: Colors.transparent),
+      show: true,
+      border: const Border(
+        bottom: BorderSide(color: Color.fromRGBO(255, 219, 219, 1.0), width: 4),
+        left: BorderSide(color: Color.fromRGBO(255, 219, 219, 1.0), width: 4),
+        right: BorderSide(color: Colors.transparent),
+        top: BorderSide(color: Colors.transparent),
       ));
-
-  LineChartBarData get lineChartBarData1_1 => LineChartBarData(
-        isCurved: true,
-        color: Colors.orange,
-        barWidth: 8,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: spotsTemperatur(),
-      );
-
-  List<FlSpot> spotsTemperatur() {
-    List<FlSpot> flSpots = [];
-    datasetTemp.forEach((reading) => flSpots.add(FlSpot(reading.timestamp.microsecondsSinceEpoch.toDouble(), reading.value)));
-    return flSpots;
-  }
-
-  LineChartBarData get lineChartBarData2_1 => LineChartBarData(
-        isCurved: true,
-        curveSmoothness: 0,
-        color: Colors.orange,
-        barWidth: 4,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 4),
-          FlSpot(5, 1.8),
-          FlSpot(7, 5),
-          FlSpot(10, 2),
-          FlSpot(12, 2.2),
-          FlSpot(13, 1.8),
-        ],
-      );
-}
-
-class LineChartSample1 extends StatefulWidget {
-  const LineChartSample1({super.key});
-
-  @override
-  State<StatefulWidget> createState() => LineChartSample1State();
-}
-
-class LineChartSample1State extends State<LineChartSample1> {
-  late bool isShowingMainData;
-
-  @override
-  void initState() {
-    super.initState();
-    isShowingMainData = true;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.23,
-      child: Stack(
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              const SizedBox(
-                height: 37,
-              ),
-              const Text(
-                'Monthly Sales',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(
-                height: 37,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16, left: 6),
-                  child: HistoryChart(isShowingTempData: isShowingMainData, datasetTemp: [], datasetOnTime: [],),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.refresh,
-              color: Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
-            ),
-            onPressed: () {
-              setState(() {
-                isShowingMainData = !isShowingMainData;
-              });
-            },
-          )
-        ],
-      ),
-    );
-  }
 }
