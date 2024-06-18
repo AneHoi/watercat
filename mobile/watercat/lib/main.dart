@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:watercat/screens/historyscreen.dart';
 
 import 'broardcastwschannel.dart';
 import 'screens/homescreen.dart';
@@ -33,7 +34,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      //home: const HomeScreen(),
       home: const HomeScreen(),
     );
   }

@@ -9,9 +9,8 @@ namespace api.clientEventHandlers;
 
 public class ClientWantsCurrentFountainStateDto : BaseDto
 {
-    public string email { get; set; }
-    
 }
+
 public class ClientWantsCurrentFountainState : BaseEventHandler<ClientWantsCurrentFountainStateDto>
 {
     private readonly WaterFountainService _waterFountainService;
@@ -26,8 +25,6 @@ public class ClientWantsCurrentFountainState : BaseEventHandler<ClientWantsCurre
         //Gets the newest state from the database and sends to user
         WaterFountainstate state = _waterFountainService.getCurrentWaterFountainstate();
         
-        Console.WriteLine(dto.email + " and state is: " + state.ison);
-
         socket.SendDto(new ServerSendsCurrentFountainstate
         {
             ison = state.ison,

@@ -15,7 +15,7 @@ public class WaterfountainRepository
     }
 
 
-    public void setWaterFountainState(WaterFountainstate waterFountainstate)
+    public void setWaterFountainState(WaterFountainstateDtoToDB waterFountainstate)
     {
         try
         {
@@ -61,5 +61,43 @@ public class WaterfountainRepository
             // Handle exceptions, maybe log them
             throw new SqlTypeException("Failed to retrieve the water fountains state", ex);
         }
+    }
+    
+    //Gets temperatures from the last week
+    public IEnumerable<TemperaturesQuery> GetHistoryTemperature(int deviceId)
+    {
+        try
+        {
+            string query = $@"SELECT temperatur, timestamp FROM historystatetable WHERE deviceid = @deviceId ORDER BY timestamp DESC;";
+            using (var conn = _dataSource.OpenConnection())
+            {
+                return conn.Query<TemperaturesQuery>(query, new {deviceId = deviceId});
+            }
+        }
+        catch (Exception e)
+        {
+            throw new SqlTypeException("Failed to retrieve the water fountains history of temperatures", e);
+
+        }
+    }
+
+    //Gets the history of on-time and timestamps of the last week
+    public IEnumerable<OnTimeQuery> getHistoryOnTime(int deviceId)
+    {
+        try
+        {
+            string query = $@"SELECT ison, timestamp FROM historystatetable WHERE deviceid = @deviceId ORDER BY timestamp DESC;";
+            using (var conn = _dataSource.OpenConnection())
+            {
+                return conn.Query<OnTimeQuery>(query, new {deviceId = deviceId});
+            }
+
+        }
+        catch (Exception e)
+        {
+            throw new SqlTypeException("Failed to retrieve the water fountains history of on time", e);
+
+        }
+            
     }
 }

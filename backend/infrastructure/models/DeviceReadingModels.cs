@@ -5,7 +5,7 @@ public class SensorDto
 {
     public double MotorValue { get; set; }
     public double TemperatureValue { get; set; }
-    public string TimeStamp { get; set; }
+    public String TimeStamp { get; set; }
 }
 
 public class DeviceReadingsDto

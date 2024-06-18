@@ -18,8 +18,12 @@ ClientEvent _$ClientEventFromJson(Map<String, dynamic> json) {
   switch (json['eventType']) {
     case 'ClientWantsToLogIn':
       return ClientWantsToLogIn.fromJson(json);
+    case 'ClientWantsHistory':
+      return ClientWantsHistory.fromJson(json);
     case 'ClientWantsCurrentFountainState':
       return ClientWantsCurrentFountainState.fromJson(json);
+    case 'ClientWantsToTurnOnFountain':
+      return ClientWantsToTurnOnFountain.fromJson(json);
 
     default:
       throw CheckedFromJsonException(json, 'eventType', 'ClientEvent',
@@ -34,8 +38,10 @@ mixin _$ClientEvent {
     required TResult Function(@JsonKey(name: 'username') String username,
             @JsonKey(name: 'password') String password)
         clientWantsToLogIn,
-    required TResult Function(@JsonKey(name: 'email') String email)
-        clientWantsCurrentFountainState,
+    required TResult Function() clientWantsHistory,
+    required TResult Function() clientWantsCurrentFountainState,
+    required TResult Function(@JsonKey(name: 'requestTime') int requestTime)
+        clientWantsToTurnOnFountain,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -43,8 +49,10 @@ mixin _$ClientEvent {
     TResult? Function(@JsonKey(name: 'username') String username,
             @JsonKey(name: 'password') String password)?
         clientWantsToLogIn,
-    TResult? Function(@JsonKey(name: 'email') String email)?
-        clientWantsCurrentFountainState,
+    TResult? Function()? clientWantsHistory,
+    TResult? Function()? clientWantsCurrentFountainState,
+    TResult? Function(@JsonKey(name: 'requestTime') int requestTime)?
+        clientWantsToTurnOnFountain,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -52,30 +60,41 @@ mixin _$ClientEvent {
     TResult Function(@JsonKey(name: 'username') String username,
             @JsonKey(name: 'password') String password)?
         clientWantsToLogIn,
-    TResult Function(@JsonKey(name: 'email') String email)?
-        clientWantsCurrentFountainState,
+    TResult Function()? clientWantsHistory,
+    TResult Function()? clientWantsCurrentFountainState,
+    TResult Function(@JsonKey(name: 'requestTime') int requestTime)?
+        clientWantsToTurnOnFountain,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(ClientWantsToLogIn value) clientWantsToLogIn,
+    required TResult Function(ClientWantsHistory value) clientWantsHistory,
     required TResult Function(ClientWantsCurrentFountainState value)
         clientWantsCurrentFountainState,
+    required TResult Function(ClientWantsToTurnOnFountain value)
+        clientWantsToTurnOnFountain,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ClientWantsToLogIn value)? clientWantsToLogIn,
+    TResult? Function(ClientWantsHistory value)? clientWantsHistory,
     TResult? Function(ClientWantsCurrentFountainState value)?
         clientWantsCurrentFountainState,
+    TResult? Function(ClientWantsToTurnOnFountain value)?
+        clientWantsToTurnOnFountain,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ClientWantsToLogIn value)? clientWantsToLogIn,
+    TResult Function(ClientWantsHistory value)? clientWantsHistory,
     TResult Function(ClientWantsCurrentFountainState value)?
         clientWantsCurrentFountainState,
+    TResult Function(ClientWantsToTurnOnFountain value)?
+        clientWantsToTurnOnFountain,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -204,8 +223,10 @@ class _$ClientWantsToLogInImpl
     required TResult Function(@JsonKey(name: 'username') String username,
             @JsonKey(name: 'password') String password)
         clientWantsToLogIn,
-    required TResult Function(@JsonKey(name: 'email') String email)
-        clientWantsCurrentFountainState,
+    required TResult Function() clientWantsHistory,
+    required TResult Function() clientWantsCurrentFountainState,
+    required TResult Function(@JsonKey(name: 'requestTime') int requestTime)
+        clientWantsToTurnOnFountain,
   }) {
     return clientWantsToLogIn(username, password);
   }
@@ -216,8 +237,10 @@ class _$ClientWantsToLogInImpl
     TResult? Function(@JsonKey(name: 'username') String username,
             @JsonKey(name: 'password') String password)?
         clientWantsToLogIn,
-    TResult? Function(@JsonKey(name: 'email') String email)?
-        clientWantsCurrentFountainState,
+    TResult? Function()? clientWantsHistory,
+    TResult? Function()? clientWantsCurrentFountainState,
+    TResult? Function(@JsonKey(name: 'requestTime') int requestTime)?
+        clientWantsToTurnOnFountain,
   }) {
     return clientWantsToLogIn?.call(username, password);
   }
@@ -228,8 +251,10 @@ class _$ClientWantsToLogInImpl
     TResult Function(@JsonKey(name: 'username') String username,
             @JsonKey(name: 'password') String password)?
         clientWantsToLogIn,
-    TResult Function(@JsonKey(name: 'email') String email)?
-        clientWantsCurrentFountainState,
+    TResult Function()? clientWantsHistory,
+    TResult Function()? clientWantsCurrentFountainState,
+    TResult Function(@JsonKey(name: 'requestTime') int requestTime)?
+        clientWantsToTurnOnFountain,
     required TResult orElse(),
   }) {
     if (clientWantsToLogIn != null) {
@@ -242,8 +267,11 @@ class _$ClientWantsToLogInImpl
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(ClientWantsToLogIn value) clientWantsToLogIn,
+    required TResult Function(ClientWantsHistory value) clientWantsHistory,
     required TResult Function(ClientWantsCurrentFountainState value)
         clientWantsCurrentFountainState,
+    required TResult Function(ClientWantsToTurnOnFountain value)
+        clientWantsToTurnOnFountain,
   }) {
     return clientWantsToLogIn(this);
   }
@@ -252,8 +280,11 @@ class _$ClientWantsToLogInImpl
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ClientWantsToLogIn value)? clientWantsToLogIn,
+    TResult? Function(ClientWantsHistory value)? clientWantsHistory,
     TResult? Function(ClientWantsCurrentFountainState value)?
         clientWantsCurrentFountainState,
+    TResult? Function(ClientWantsToTurnOnFountain value)?
+        clientWantsToTurnOnFountain,
   }) {
     return clientWantsToLogIn?.call(this);
   }
@@ -262,8 +293,11 @@ class _$ClientWantsToLogInImpl
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ClientWantsToLogIn value)? clientWantsToLogIn,
+    TResult Function(ClientWantsHistory value)? clientWantsHistory,
     TResult Function(ClientWantsCurrentFountainState value)?
         clientWantsCurrentFountainState,
+    TResult Function(ClientWantsToTurnOnFountain value)?
+        clientWantsToTurnOnFountain,
     required TResult orElse(),
   }) {
     if (clientWantsToLogIn != null) {
@@ -299,13 +333,167 @@ abstract class ClientWantsToLogIn implements ClientEvent {
 }
 
 /// @nodoc
+abstract class _$$ClientWantsHistoryImplCopyWith<$Res> {
+  factory _$$ClientWantsHistoryImplCopyWith(_$ClientWantsHistoryImpl value,
+          $Res Function(_$ClientWantsHistoryImpl) then) =
+      __$$ClientWantsHistoryImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$ClientWantsHistoryImplCopyWithImpl<$Res>
+    extends _$ClientEventCopyWithImpl<$Res, _$ClientWantsHistoryImpl>
+    implements _$$ClientWantsHistoryImplCopyWith<$Res> {
+  __$$ClientWantsHistoryImplCopyWithImpl(_$ClientWantsHistoryImpl _value,
+      $Res Function(_$ClientWantsHistoryImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ClientWantsHistoryImpl
+    with DiagnosticableTreeMixin
+    implements ClientWantsHistory {
+  _$ClientWantsHistoryImpl({final String? $type})
+      : $type = $type ?? 'ClientWantsHistory';
+
+  factory _$ClientWantsHistoryImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ClientWantsHistoryImplFromJson(json);
+
+  @JsonKey(name: 'eventType')
+  final String $type;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'ClientEvent.clientWantsHistory()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'ClientEvent.clientWantsHistory'));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$ClientWantsHistoryImpl);
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(@JsonKey(name: 'username') String username,
+            @JsonKey(name: 'password') String password)
+        clientWantsToLogIn,
+    required TResult Function() clientWantsHistory,
+    required TResult Function() clientWantsCurrentFountainState,
+    required TResult Function(@JsonKey(name: 'requestTime') int requestTime)
+        clientWantsToTurnOnFountain,
+  }) {
+    return clientWantsHistory();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(@JsonKey(name: 'username') String username,
+            @JsonKey(name: 'password') String password)?
+        clientWantsToLogIn,
+    TResult? Function()? clientWantsHistory,
+    TResult? Function()? clientWantsCurrentFountainState,
+    TResult? Function(@JsonKey(name: 'requestTime') int requestTime)?
+        clientWantsToTurnOnFountain,
+  }) {
+    return clientWantsHistory?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(@JsonKey(name: 'username') String username,
+            @JsonKey(name: 'password') String password)?
+        clientWantsToLogIn,
+    TResult Function()? clientWantsHistory,
+    TResult Function()? clientWantsCurrentFountainState,
+    TResult Function(@JsonKey(name: 'requestTime') int requestTime)?
+        clientWantsToTurnOnFountain,
+    required TResult orElse(),
+  }) {
+    if (clientWantsHistory != null) {
+      return clientWantsHistory();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ClientWantsToLogIn value) clientWantsToLogIn,
+    required TResult Function(ClientWantsHistory value) clientWantsHistory,
+    required TResult Function(ClientWantsCurrentFountainState value)
+        clientWantsCurrentFountainState,
+    required TResult Function(ClientWantsToTurnOnFountain value)
+        clientWantsToTurnOnFountain,
+  }) {
+    return clientWantsHistory(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ClientWantsToLogIn value)? clientWantsToLogIn,
+    TResult? Function(ClientWantsHistory value)? clientWantsHistory,
+    TResult? Function(ClientWantsCurrentFountainState value)?
+        clientWantsCurrentFountainState,
+    TResult? Function(ClientWantsToTurnOnFountain value)?
+        clientWantsToTurnOnFountain,
+  }) {
+    return clientWantsHistory?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ClientWantsToLogIn value)? clientWantsToLogIn,
+    TResult Function(ClientWantsHistory value)? clientWantsHistory,
+    TResult Function(ClientWantsCurrentFountainState value)?
+        clientWantsCurrentFountainState,
+    TResult Function(ClientWantsToTurnOnFountain value)?
+        clientWantsToTurnOnFountain,
+    required TResult orElse(),
+  }) {
+    if (clientWantsHistory != null) {
+      return clientWantsHistory(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ClientWantsHistoryImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class ClientWantsHistory implements ClientEvent {
+  factory ClientWantsHistory() = _$ClientWantsHistoryImpl;
+
+  factory ClientWantsHistory.fromJson(Map<String, dynamic> json) =
+      _$ClientWantsHistoryImpl.fromJson;
+}
+
+/// @nodoc
 abstract class _$$ClientWantsCurrentFountainStateImplCopyWith<$Res> {
   factory _$$ClientWantsCurrentFountainStateImplCopyWith(
           _$ClientWantsCurrentFountainStateImpl value,
           $Res Function(_$ClientWantsCurrentFountainStateImpl) then) =
       __$$ClientWantsCurrentFountainStateImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({@JsonKey(name: 'email') String email});
 }
 
 /// @nodoc
@@ -317,19 +505,6 @@ class __$$ClientWantsCurrentFountainStateImplCopyWithImpl<$Res>
       _$ClientWantsCurrentFountainStateImpl _value,
       $Res Function(_$ClientWantsCurrentFountainStateImpl) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? email = null,
-  }) {
-    return _then(_$ClientWantsCurrentFountainStateImpl(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
@@ -337,54 +512,38 @@ class __$$ClientWantsCurrentFountainStateImplCopyWithImpl<$Res>
 class _$ClientWantsCurrentFountainStateImpl
     with DiagnosticableTreeMixin
     implements ClientWantsCurrentFountainState {
-  _$ClientWantsCurrentFountainStateImpl(
-      {@JsonKey(name: 'email') required this.email, final String? $type})
+  _$ClientWantsCurrentFountainStateImpl({final String? $type})
       : $type = $type ?? 'ClientWantsCurrentFountainState';
 
   factory _$ClientWantsCurrentFountainStateImpl.fromJson(
           Map<String, dynamic> json) =>
       _$$ClientWantsCurrentFountainStateImplFromJson(json);
 
-  @override
-  @JsonKey(name: 'email')
-  final String email;
-
   @JsonKey(name: 'eventType')
   final String $type;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ClientEvent.clientWantsCurrentFountainState(email: $email)';
+    return 'ClientEvent.clientWantsCurrentFountainState()';
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty(
-          'type', 'ClientEvent.clientWantsCurrentFountainState'))
-      ..add(DiagnosticsProperty('email', email));
+    properties.add(DiagnosticsProperty(
+        'type', 'ClientEvent.clientWantsCurrentFountainState'));
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ClientWantsCurrentFountainStateImpl &&
-            (identical(other.email, email) || other.email == email));
+            other is _$ClientWantsCurrentFountainStateImpl);
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, email);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ClientWantsCurrentFountainStateImplCopyWith<
-          _$ClientWantsCurrentFountainStateImpl>
-      get copyWith => __$$ClientWantsCurrentFountainStateImplCopyWithImpl<
-          _$ClientWantsCurrentFountainStateImpl>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
@@ -392,10 +551,12 @@ class _$ClientWantsCurrentFountainStateImpl
     required TResult Function(@JsonKey(name: 'username') String username,
             @JsonKey(name: 'password') String password)
         clientWantsToLogIn,
-    required TResult Function(@JsonKey(name: 'email') String email)
-        clientWantsCurrentFountainState,
+    required TResult Function() clientWantsHistory,
+    required TResult Function() clientWantsCurrentFountainState,
+    required TResult Function(@JsonKey(name: 'requestTime') int requestTime)
+        clientWantsToTurnOnFountain,
   }) {
-    return clientWantsCurrentFountainState(email);
+    return clientWantsCurrentFountainState();
   }
 
   @override
@@ -404,10 +565,12 @@ class _$ClientWantsCurrentFountainStateImpl
     TResult? Function(@JsonKey(name: 'username') String username,
             @JsonKey(name: 'password') String password)?
         clientWantsToLogIn,
-    TResult? Function(@JsonKey(name: 'email') String email)?
-        clientWantsCurrentFountainState,
+    TResult? Function()? clientWantsHistory,
+    TResult? Function()? clientWantsCurrentFountainState,
+    TResult? Function(@JsonKey(name: 'requestTime') int requestTime)?
+        clientWantsToTurnOnFountain,
   }) {
-    return clientWantsCurrentFountainState?.call(email);
+    return clientWantsCurrentFountainState?.call();
   }
 
   @override
@@ -416,12 +579,14 @@ class _$ClientWantsCurrentFountainStateImpl
     TResult Function(@JsonKey(name: 'username') String username,
             @JsonKey(name: 'password') String password)?
         clientWantsToLogIn,
-    TResult Function(@JsonKey(name: 'email') String email)?
-        clientWantsCurrentFountainState,
+    TResult Function()? clientWantsHistory,
+    TResult Function()? clientWantsCurrentFountainState,
+    TResult Function(@JsonKey(name: 'requestTime') int requestTime)?
+        clientWantsToTurnOnFountain,
     required TResult orElse(),
   }) {
     if (clientWantsCurrentFountainState != null) {
-      return clientWantsCurrentFountainState(email);
+      return clientWantsCurrentFountainState();
     }
     return orElse();
   }
@@ -430,8 +595,11 @@ class _$ClientWantsCurrentFountainStateImpl
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(ClientWantsToLogIn value) clientWantsToLogIn,
+    required TResult Function(ClientWantsHistory value) clientWantsHistory,
     required TResult Function(ClientWantsCurrentFountainState value)
         clientWantsCurrentFountainState,
+    required TResult Function(ClientWantsToTurnOnFountain value)
+        clientWantsToTurnOnFountain,
   }) {
     return clientWantsCurrentFountainState(this);
   }
@@ -440,8 +608,11 @@ class _$ClientWantsCurrentFountainStateImpl
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ClientWantsToLogIn value)? clientWantsToLogIn,
+    TResult? Function(ClientWantsHistory value)? clientWantsHistory,
     TResult? Function(ClientWantsCurrentFountainState value)?
         clientWantsCurrentFountainState,
+    TResult? Function(ClientWantsToTurnOnFountain value)?
+        clientWantsToTurnOnFountain,
   }) {
     return clientWantsCurrentFountainState?.call(this);
   }
@@ -450,8 +621,11 @@ class _$ClientWantsCurrentFountainStateImpl
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ClientWantsToLogIn value)? clientWantsToLogIn,
+    TResult Function(ClientWantsHistory value)? clientWantsHistory,
     TResult Function(ClientWantsCurrentFountainState value)?
         clientWantsCurrentFountainState,
+    TResult Function(ClientWantsToTurnOnFountain value)?
+        clientWantsToTurnOnFountain,
     required TResult orElse(),
   }) {
     if (clientWantsCurrentFountainState != null) {
@@ -469,18 +643,210 @@ class _$ClientWantsCurrentFountainStateImpl
 }
 
 abstract class ClientWantsCurrentFountainState implements ClientEvent {
-  factory ClientWantsCurrentFountainState(
-          {@JsonKey(name: 'email') required final String email}) =
+  factory ClientWantsCurrentFountainState() =
       _$ClientWantsCurrentFountainStateImpl;
 
   factory ClientWantsCurrentFountainState.fromJson(Map<String, dynamic> json) =
       _$ClientWantsCurrentFountainStateImpl.fromJson;
+}
 
-  @JsonKey(name: 'email')
-  String get email;
+/// @nodoc
+abstract class _$$ClientWantsToTurnOnFountainImplCopyWith<$Res> {
+  factory _$$ClientWantsToTurnOnFountainImplCopyWith(
+          _$ClientWantsToTurnOnFountainImpl value,
+          $Res Function(_$ClientWantsToTurnOnFountainImpl) then) =
+      __$$ClientWantsToTurnOnFountainImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({@JsonKey(name: 'requestTime') int requestTime});
+}
+
+/// @nodoc
+class __$$ClientWantsToTurnOnFountainImplCopyWithImpl<$Res>
+    extends _$ClientEventCopyWithImpl<$Res, _$ClientWantsToTurnOnFountainImpl>
+    implements _$$ClientWantsToTurnOnFountainImplCopyWith<$Res> {
+  __$$ClientWantsToTurnOnFountainImplCopyWithImpl(
+      _$ClientWantsToTurnOnFountainImpl _value,
+      $Res Function(_$ClientWantsToTurnOnFountainImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? requestTime = null,
+  }) {
+    return _then(_$ClientWantsToTurnOnFountainImpl(
+      requestTime: null == requestTime
+          ? _value.requestTime
+          : requestTime // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ClientWantsToTurnOnFountainImpl
+    with DiagnosticableTreeMixin
+    implements ClientWantsToTurnOnFountain {
+  _$ClientWantsToTurnOnFountainImpl(
+      {@JsonKey(name: 'requestTime') required this.requestTime,
+      final String? $type})
+      : $type = $type ?? 'ClientWantsToTurnOnFountain';
+
+  factory _$ClientWantsToTurnOnFountainImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$ClientWantsToTurnOnFountainImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'requestTime')
+  final int requestTime;
+
+  @JsonKey(name: 'eventType')
+  final String $type;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'ClientEvent.clientWantsToTurnOnFountain(requestTime: $requestTime)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'ClientEvent.clientWantsToTurnOnFountain'))
+      ..add(DiagnosticsProperty('requestTime', requestTime));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ClientWantsToTurnOnFountainImpl &&
+            (identical(other.requestTime, requestTime) ||
+                other.requestTime == requestTime));
+  }
+
   @JsonKey(ignore: true)
-  _$$ClientWantsCurrentFountainStateImplCopyWith<
-          _$ClientWantsCurrentFountainStateImpl>
+  @override
+  int get hashCode => Object.hash(runtimeType, requestTime);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ClientWantsToTurnOnFountainImplCopyWith<_$ClientWantsToTurnOnFountainImpl>
+      get copyWith => __$$ClientWantsToTurnOnFountainImplCopyWithImpl<
+          _$ClientWantsToTurnOnFountainImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(@JsonKey(name: 'username') String username,
+            @JsonKey(name: 'password') String password)
+        clientWantsToLogIn,
+    required TResult Function() clientWantsHistory,
+    required TResult Function() clientWantsCurrentFountainState,
+    required TResult Function(@JsonKey(name: 'requestTime') int requestTime)
+        clientWantsToTurnOnFountain,
+  }) {
+    return clientWantsToTurnOnFountain(requestTime);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(@JsonKey(name: 'username') String username,
+            @JsonKey(name: 'password') String password)?
+        clientWantsToLogIn,
+    TResult? Function()? clientWantsHistory,
+    TResult? Function()? clientWantsCurrentFountainState,
+    TResult? Function(@JsonKey(name: 'requestTime') int requestTime)?
+        clientWantsToTurnOnFountain,
+  }) {
+    return clientWantsToTurnOnFountain?.call(requestTime);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(@JsonKey(name: 'username') String username,
+            @JsonKey(name: 'password') String password)?
+        clientWantsToLogIn,
+    TResult Function()? clientWantsHistory,
+    TResult Function()? clientWantsCurrentFountainState,
+    TResult Function(@JsonKey(name: 'requestTime') int requestTime)?
+        clientWantsToTurnOnFountain,
+    required TResult orElse(),
+  }) {
+    if (clientWantsToTurnOnFountain != null) {
+      return clientWantsToTurnOnFountain(requestTime);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ClientWantsToLogIn value) clientWantsToLogIn,
+    required TResult Function(ClientWantsHistory value) clientWantsHistory,
+    required TResult Function(ClientWantsCurrentFountainState value)
+        clientWantsCurrentFountainState,
+    required TResult Function(ClientWantsToTurnOnFountain value)
+        clientWantsToTurnOnFountain,
+  }) {
+    return clientWantsToTurnOnFountain(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ClientWantsToLogIn value)? clientWantsToLogIn,
+    TResult? Function(ClientWantsHistory value)? clientWantsHistory,
+    TResult? Function(ClientWantsCurrentFountainState value)?
+        clientWantsCurrentFountainState,
+    TResult? Function(ClientWantsToTurnOnFountain value)?
+        clientWantsToTurnOnFountain,
+  }) {
+    return clientWantsToTurnOnFountain?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ClientWantsToLogIn value)? clientWantsToLogIn,
+    TResult Function(ClientWantsHistory value)? clientWantsHistory,
+    TResult Function(ClientWantsCurrentFountainState value)?
+        clientWantsCurrentFountainState,
+    TResult Function(ClientWantsToTurnOnFountain value)?
+        clientWantsToTurnOnFountain,
+    required TResult orElse(),
+  }) {
+    if (clientWantsToTurnOnFountain != null) {
+      return clientWantsToTurnOnFountain(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ClientWantsToTurnOnFountainImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class ClientWantsToTurnOnFountain implements ClientEvent {
+  factory ClientWantsToTurnOnFountain(
+          {@JsonKey(name: 'requestTime') required final int requestTime}) =
+      _$ClientWantsToTurnOnFountainImpl;
+
+  factory ClientWantsToTurnOnFountain.fromJson(Map<String, dynamic> json) =
+      _$ClientWantsToTurnOnFountainImpl.fromJson;
+
+  @JsonKey(name: 'requestTime')
+  int get requestTime;
+  @JsonKey(ignore: true)
+  _$$ClientWantsToTurnOnFountainImplCopyWith<_$ClientWantsToTurnOnFountainImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -488,10 +854,14 @@ ServerEvent _$ServerEventFromJson(Map<String, dynamic> json) {
   switch (json['eventType']) {
     case 'ServerSendsCurrentFountainstate':
       return ServerSendsCurrentFountainstate.fromJson(json);
+    case 'ServerConfirmRequestToTurnOn':
+      return ServerConfirmRequestToTurnOn.fromJson(json);
     case 'ServerConfirmsRegistration':
       return ServerConfirmsRegistration.fromJson(json);
     case 'ServerConfirmsLogin':
       return ServerConfirmsLogin.fromJson(json);
+    case 'ServerSendsHistory':
+      return ServerSendsHistory.fromJson(json);
 
     default:
       throw CheckedFromJsonException(json, 'eventType', 'ServerEvent',
@@ -506,8 +876,10 @@ mixin _$ServerEvent {
     required TResult Function(
             @JsonKey(name: 'ison') bool isOn,
             @JsonKey(name: 'temperatur') double temperatur,
-            @JsonKey(name: 'TimeStamp') String timestamp)
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)
         serverSendsCurrentFountainstate,
+    required TResult Function(@JsonKey(name: 'message') String message)
+        ServerConfirmRequestToTurnOn,
     required TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsRegistration,
@@ -516,6 +888,10 @@ mixin _$ServerEvent {
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsLogin,
+    required TResult Function(
+            @JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)
+        serverSendsHistory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -523,8 +899,10 @@ mixin _$ServerEvent {
     TResult? Function(
             @JsonKey(name: 'ison') bool isOn,
             @JsonKey(name: 'temperatur') double temperatur,
-            @JsonKey(name: 'TimeStamp') String timestamp)?
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)?
         serverSendsCurrentFountainstate,
+    TResult? Function(@JsonKey(name: 'message') String message)?
+        ServerConfirmRequestToTurnOn,
     TResult? Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsRegistration,
@@ -533,6 +911,9 @@ mixin _$ServerEvent {
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
+    TResult? Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
+        serverSendsHistory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -540,8 +921,10 @@ mixin _$ServerEvent {
     TResult Function(
             @JsonKey(name: 'ison') bool isOn,
             @JsonKey(name: 'temperatur') double temperatur,
-            @JsonKey(name: 'TimeStamp') String timestamp)?
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)?
         serverSendsCurrentFountainstate,
+    TResult Function(@JsonKey(name: 'message') String message)?
+        ServerConfirmRequestToTurnOn,
     TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsRegistration,
@@ -550,6 +933,9 @@ mixin _$ServerEvent {
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
+    TResult Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
+        serverSendsHistory,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -557,27 +943,36 @@ mixin _$ServerEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(ServerSendsCurrentFountainstate value)
         serverSendsCurrentFountainstate,
+    required TResult Function(ServerConfirmRequestToTurnOn value)
+        ServerConfirmRequestToTurnOn,
     required TResult Function(ServerConfirmsRegistration value)
         serverConfirmsRegistration,
     required TResult Function(ServerConfirmsLogin value) serverConfirmsLogin,
+    required TResult Function(ServerSendsHistory value) serverSendsHistory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerSendsCurrentFountainstate value)?
         serverSendsCurrentFountainstate,
+    TResult? Function(ServerConfirmRequestToTurnOn value)?
+        ServerConfirmRequestToTurnOn,
     TResult? Function(ServerConfirmsRegistration value)?
         serverConfirmsRegistration,
     TResult? Function(ServerConfirmsLogin value)? serverConfirmsLogin,
+    TResult? Function(ServerSendsHistory value)? serverSendsHistory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerSendsCurrentFountainstate value)?
         serverSendsCurrentFountainstate,
+    TResult Function(ServerConfirmRequestToTurnOn value)?
+        ServerConfirmRequestToTurnOn,
     TResult Function(ServerConfirmsRegistration value)?
         serverConfirmsRegistration,
     TResult Function(ServerConfirmsLogin value)? serverConfirmsLogin,
+    TResult Function(ServerSendsHistory value)? serverSendsHistory,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -612,7 +1007,7 @@ abstract class _$$ServerSendsCurrentFountainstateImplCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'ison') bool isOn,
       @JsonKey(name: 'temperatur') double temperatur,
-      @JsonKey(name: 'TimeStamp') String timestamp});
+      @JsonKey(name: 'TimeStamp') DateTime timestamp});
 }
 
 /// @nodoc
@@ -644,7 +1039,7 @@ class __$$ServerSendsCurrentFountainstateImplCopyWithImpl<$Res>
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
-              as String,
+              as DateTime,
     ));
   }
 }
@@ -673,7 +1068,7 @@ class _$ServerSendsCurrentFountainstateImpl
   final double temperatur;
   @override
   @JsonKey(name: 'TimeStamp')
-  final String timestamp;
+  final DateTime timestamp;
 
   @JsonKey(name: 'eventType')
   final String $type;
@@ -724,8 +1119,10 @@ class _$ServerSendsCurrentFountainstateImpl
     required TResult Function(
             @JsonKey(name: 'ison') bool isOn,
             @JsonKey(name: 'temperatur') double temperatur,
-            @JsonKey(name: 'TimeStamp') String timestamp)
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)
         serverSendsCurrentFountainstate,
+    required TResult Function(@JsonKey(name: 'message') String message)
+        ServerConfirmRequestToTurnOn,
     required TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsRegistration,
@@ -734,6 +1131,10 @@ class _$ServerSendsCurrentFountainstateImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsLogin,
+    required TResult Function(
+            @JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)
+        serverSendsHistory,
   }) {
     return serverSendsCurrentFountainstate(isOn, temperatur, timestamp);
   }
@@ -744,8 +1145,10 @@ class _$ServerSendsCurrentFountainstateImpl
     TResult? Function(
             @JsonKey(name: 'ison') bool isOn,
             @JsonKey(name: 'temperatur') double temperatur,
-            @JsonKey(name: 'TimeStamp') String timestamp)?
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)?
         serverSendsCurrentFountainstate,
+    TResult? Function(@JsonKey(name: 'message') String message)?
+        ServerConfirmRequestToTurnOn,
     TResult? Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsRegistration,
@@ -754,6 +1157,9 @@ class _$ServerSendsCurrentFountainstateImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
+    TResult? Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
+        serverSendsHistory,
   }) {
     return serverSendsCurrentFountainstate?.call(isOn, temperatur, timestamp);
   }
@@ -764,8 +1170,10 @@ class _$ServerSendsCurrentFountainstateImpl
     TResult Function(
             @JsonKey(name: 'ison') bool isOn,
             @JsonKey(name: 'temperatur') double temperatur,
-            @JsonKey(name: 'TimeStamp') String timestamp)?
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)?
         serverSendsCurrentFountainstate,
+    TResult Function(@JsonKey(name: 'message') String message)?
+        ServerConfirmRequestToTurnOn,
     TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsRegistration,
@@ -774,6 +1182,9 @@ class _$ServerSendsCurrentFountainstateImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
+    TResult Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
+        serverSendsHistory,
     required TResult orElse(),
   }) {
     if (serverSendsCurrentFountainstate != null) {
@@ -787,9 +1198,12 @@ class _$ServerSendsCurrentFountainstateImpl
   TResult map<TResult extends Object?>({
     required TResult Function(ServerSendsCurrentFountainstate value)
         serverSendsCurrentFountainstate,
+    required TResult Function(ServerConfirmRequestToTurnOn value)
+        ServerConfirmRequestToTurnOn,
     required TResult Function(ServerConfirmsRegistration value)
         serverConfirmsRegistration,
     required TResult Function(ServerConfirmsLogin value) serverConfirmsLogin,
+    required TResult Function(ServerSendsHistory value) serverSendsHistory,
   }) {
     return serverSendsCurrentFountainstate(this);
   }
@@ -799,9 +1213,12 @@ class _$ServerSendsCurrentFountainstateImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerSendsCurrentFountainstate value)?
         serverSendsCurrentFountainstate,
+    TResult? Function(ServerConfirmRequestToTurnOn value)?
+        ServerConfirmRequestToTurnOn,
     TResult? Function(ServerConfirmsRegistration value)?
         serverConfirmsRegistration,
     TResult? Function(ServerConfirmsLogin value)? serverConfirmsLogin,
+    TResult? Function(ServerSendsHistory value)? serverSendsHistory,
   }) {
     return serverSendsCurrentFountainstate?.call(this);
   }
@@ -811,9 +1228,12 @@ class _$ServerSendsCurrentFountainstateImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerSendsCurrentFountainstate value)?
         serverSendsCurrentFountainstate,
+    TResult Function(ServerConfirmRequestToTurnOn value)?
+        ServerConfirmRequestToTurnOn,
     TResult Function(ServerConfirmsRegistration value)?
         serverConfirmsRegistration,
     TResult Function(ServerConfirmsLogin value)? serverConfirmsLogin,
+    TResult Function(ServerSendsHistory value)? serverSendsHistory,
     required TResult orElse(),
   }) {
     if (serverSendsCurrentFountainstate != null) {
@@ -834,7 +1254,7 @@ abstract class ServerSendsCurrentFountainstate implements ServerEvent {
   factory ServerSendsCurrentFountainstate(
           {@JsonKey(name: 'ison') required final bool isOn,
           @JsonKey(name: 'temperatur') required final double temperatur,
-          @JsonKey(name: 'TimeStamp') required final String timestamp}) =
+          @JsonKey(name: 'TimeStamp') required final DateTime timestamp}) =
       _$ServerSendsCurrentFountainstateImpl;
 
   factory ServerSendsCurrentFountainstate.fromJson(Map<String, dynamic> json) =
@@ -845,10 +1265,250 @@ abstract class ServerSendsCurrentFountainstate implements ServerEvent {
   @JsonKey(name: 'temperatur')
   double get temperatur;
   @JsonKey(name: 'TimeStamp')
-  String get timestamp;
+  DateTime get timestamp;
   @JsonKey(ignore: true)
   _$$ServerSendsCurrentFountainstateImplCopyWith<
           _$ServerSendsCurrentFountainstateImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$ServerConfirmRequestToTurnOnImplCopyWith<$Res> {
+  factory _$$ServerConfirmRequestToTurnOnImplCopyWith(
+          _$ServerConfirmRequestToTurnOnImpl value,
+          $Res Function(_$ServerConfirmRequestToTurnOnImpl) then) =
+      __$$ServerConfirmRequestToTurnOnImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({@JsonKey(name: 'message') String message});
+}
+
+/// @nodoc
+class __$$ServerConfirmRequestToTurnOnImplCopyWithImpl<$Res>
+    extends _$ServerEventCopyWithImpl<$Res, _$ServerConfirmRequestToTurnOnImpl>
+    implements _$$ServerConfirmRequestToTurnOnImplCopyWith<$Res> {
+  __$$ServerConfirmRequestToTurnOnImplCopyWithImpl(
+      _$ServerConfirmRequestToTurnOnImpl _value,
+      $Res Function(_$ServerConfirmRequestToTurnOnImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$ServerConfirmRequestToTurnOnImpl(
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ServerConfirmRequestToTurnOnImpl
+    with DiagnosticableTreeMixin
+    implements ServerConfirmRequestToTurnOn {
+  _$ServerConfirmRequestToTurnOnImpl(
+      {@JsonKey(name: 'message') required this.message, final String? $type})
+      : $type = $type ?? 'ServerConfirmRequestToTurnOn';
+
+  factory _$ServerConfirmRequestToTurnOnImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$ServerConfirmRequestToTurnOnImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'message')
+  final String message;
+
+  @JsonKey(name: 'eventType')
+  final String $type;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'ServerEvent.ServerConfirmRequestToTurnOn(message: $message)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'ServerEvent.ServerConfirmRequestToTurnOn'))
+      ..add(DiagnosticsProperty('message', message));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ServerConfirmRequestToTurnOnImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ServerConfirmRequestToTurnOnImplCopyWith<
+          _$ServerConfirmRequestToTurnOnImpl>
+      get copyWith => __$$ServerConfirmRequestToTurnOnImplCopyWithImpl<
+          _$ServerConfirmRequestToTurnOnImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)
+        serverSendsCurrentFountainstate,
+    required TResult Function(@JsonKey(name: 'message') String message)
+        ServerConfirmRequestToTurnOn,
+    required TResult Function(@JsonKey(name: 'Message') String message,
+            @JsonKey(name: 'UserId') int userId)
+        serverConfirmsRegistration,
+    required TResult Function(
+            @JsonKey(name: 'Message') String message,
+            @JsonKey(name: 'Token') Object token,
+            @JsonKey(name: 'UserId') int userId)
+        serverConfirmsLogin,
+    required TResult Function(
+            @JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)
+        serverSendsHistory,
+  }) {
+    return ServerConfirmRequestToTurnOn(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)?
+        serverSendsCurrentFountainstate,
+    TResult? Function(@JsonKey(name: 'message') String message)?
+        ServerConfirmRequestToTurnOn,
+    TResult? Function(@JsonKey(name: 'Message') String message,
+            @JsonKey(name: 'UserId') int userId)?
+        serverConfirmsRegistration,
+    TResult? Function(
+            @JsonKey(name: 'Message') String message,
+            @JsonKey(name: 'Token') Object token,
+            @JsonKey(name: 'UserId') int userId)?
+        serverConfirmsLogin,
+    TResult? Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
+        serverSendsHistory,
+  }) {
+    return ServerConfirmRequestToTurnOn?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)?
+        serverSendsCurrentFountainstate,
+    TResult Function(@JsonKey(name: 'message') String message)?
+        ServerConfirmRequestToTurnOn,
+    TResult Function(@JsonKey(name: 'Message') String message,
+            @JsonKey(name: 'UserId') int userId)?
+        serverConfirmsRegistration,
+    TResult Function(
+            @JsonKey(name: 'Message') String message,
+            @JsonKey(name: 'Token') Object token,
+            @JsonKey(name: 'UserId') int userId)?
+        serverConfirmsLogin,
+    TResult Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
+        serverSendsHistory,
+    required TResult orElse(),
+  }) {
+    if (ServerConfirmRequestToTurnOn != null) {
+      return ServerConfirmRequestToTurnOn(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServerSendsCurrentFountainstate value)
+        serverSendsCurrentFountainstate,
+    required TResult Function(ServerConfirmRequestToTurnOn value)
+        ServerConfirmRequestToTurnOn,
+    required TResult Function(ServerConfirmsRegistration value)
+        serverConfirmsRegistration,
+    required TResult Function(ServerConfirmsLogin value) serverConfirmsLogin,
+    required TResult Function(ServerSendsHistory value) serverSendsHistory,
+  }) {
+    return ServerConfirmRequestToTurnOn(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServerSendsCurrentFountainstate value)?
+        serverSendsCurrentFountainstate,
+    TResult? Function(ServerConfirmRequestToTurnOn value)?
+        ServerConfirmRequestToTurnOn,
+    TResult? Function(ServerConfirmsRegistration value)?
+        serverConfirmsRegistration,
+    TResult? Function(ServerConfirmsLogin value)? serverConfirmsLogin,
+    TResult? Function(ServerSendsHistory value)? serverSendsHistory,
+  }) {
+    return ServerConfirmRequestToTurnOn?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServerSendsCurrentFountainstate value)?
+        serverSendsCurrentFountainstate,
+    TResult Function(ServerConfirmRequestToTurnOn value)?
+        ServerConfirmRequestToTurnOn,
+    TResult Function(ServerConfirmsRegistration value)?
+        serverConfirmsRegistration,
+    TResult Function(ServerConfirmsLogin value)? serverConfirmsLogin,
+    TResult Function(ServerSendsHistory value)? serverSendsHistory,
+    required TResult orElse(),
+  }) {
+    if (ServerConfirmRequestToTurnOn != null) {
+      return ServerConfirmRequestToTurnOn(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ServerConfirmRequestToTurnOnImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class ServerConfirmRequestToTurnOn implements ServerEvent {
+  factory ServerConfirmRequestToTurnOn(
+          {@JsonKey(name: 'message') required final String message}) =
+      _$ServerConfirmRequestToTurnOnImpl;
+
+  factory ServerConfirmRequestToTurnOn.fromJson(Map<String, dynamic> json) =
+      _$ServerConfirmRequestToTurnOnImpl.fromJson;
+
+  @JsonKey(name: 'message')
+  String get message;
+  @JsonKey(ignore: true)
+  _$$ServerConfirmRequestToTurnOnImplCopyWith<
+          _$ServerConfirmRequestToTurnOnImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -958,8 +1618,10 @@ class _$ServerConfirmsRegistrationImpl
     required TResult Function(
             @JsonKey(name: 'ison') bool isOn,
             @JsonKey(name: 'temperatur') double temperatur,
-            @JsonKey(name: 'TimeStamp') String timestamp)
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)
         serverSendsCurrentFountainstate,
+    required TResult Function(@JsonKey(name: 'message') String message)
+        ServerConfirmRequestToTurnOn,
     required TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsRegistration,
@@ -968,6 +1630,10 @@ class _$ServerConfirmsRegistrationImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsLogin,
+    required TResult Function(
+            @JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)
+        serverSendsHistory,
   }) {
     return serverConfirmsRegistration(message, userId);
   }
@@ -978,8 +1644,10 @@ class _$ServerConfirmsRegistrationImpl
     TResult? Function(
             @JsonKey(name: 'ison') bool isOn,
             @JsonKey(name: 'temperatur') double temperatur,
-            @JsonKey(name: 'TimeStamp') String timestamp)?
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)?
         serverSendsCurrentFountainstate,
+    TResult? Function(@JsonKey(name: 'message') String message)?
+        ServerConfirmRequestToTurnOn,
     TResult? Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsRegistration,
@@ -988,6 +1656,9 @@ class _$ServerConfirmsRegistrationImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
+    TResult? Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
+        serverSendsHistory,
   }) {
     return serverConfirmsRegistration?.call(message, userId);
   }
@@ -998,8 +1669,10 @@ class _$ServerConfirmsRegistrationImpl
     TResult Function(
             @JsonKey(name: 'ison') bool isOn,
             @JsonKey(name: 'temperatur') double temperatur,
-            @JsonKey(name: 'TimeStamp') String timestamp)?
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)?
         serverSendsCurrentFountainstate,
+    TResult Function(@JsonKey(name: 'message') String message)?
+        ServerConfirmRequestToTurnOn,
     TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsRegistration,
@@ -1008,6 +1681,9 @@ class _$ServerConfirmsRegistrationImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
+    TResult Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
+        serverSendsHistory,
     required TResult orElse(),
   }) {
     if (serverConfirmsRegistration != null) {
@@ -1021,9 +1697,12 @@ class _$ServerConfirmsRegistrationImpl
   TResult map<TResult extends Object?>({
     required TResult Function(ServerSendsCurrentFountainstate value)
         serverSendsCurrentFountainstate,
+    required TResult Function(ServerConfirmRequestToTurnOn value)
+        ServerConfirmRequestToTurnOn,
     required TResult Function(ServerConfirmsRegistration value)
         serverConfirmsRegistration,
     required TResult Function(ServerConfirmsLogin value) serverConfirmsLogin,
+    required TResult Function(ServerSendsHistory value) serverSendsHistory,
   }) {
     return serverConfirmsRegistration(this);
   }
@@ -1033,9 +1712,12 @@ class _$ServerConfirmsRegistrationImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerSendsCurrentFountainstate value)?
         serverSendsCurrentFountainstate,
+    TResult? Function(ServerConfirmRequestToTurnOn value)?
+        ServerConfirmRequestToTurnOn,
     TResult? Function(ServerConfirmsRegistration value)?
         serverConfirmsRegistration,
     TResult? Function(ServerConfirmsLogin value)? serverConfirmsLogin,
+    TResult? Function(ServerSendsHistory value)? serverSendsHistory,
   }) {
     return serverConfirmsRegistration?.call(this);
   }
@@ -1045,9 +1727,12 @@ class _$ServerConfirmsRegistrationImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerSendsCurrentFountainstate value)?
         serverSendsCurrentFountainstate,
+    TResult Function(ServerConfirmRequestToTurnOn value)?
+        ServerConfirmRequestToTurnOn,
     TResult Function(ServerConfirmsRegistration value)?
         serverConfirmsRegistration,
     TResult Function(ServerConfirmsLogin value)? serverConfirmsLogin,
+    TResult Function(ServerSendsHistory value)? serverSendsHistory,
     required TResult orElse(),
   }) {
     if (serverConfirmsRegistration != null) {
@@ -1194,8 +1879,10 @@ class _$ServerConfirmsLoginImpl
     required TResult Function(
             @JsonKey(name: 'ison') bool isOn,
             @JsonKey(name: 'temperatur') double temperatur,
-            @JsonKey(name: 'TimeStamp') String timestamp)
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)
         serverSendsCurrentFountainstate,
+    required TResult Function(@JsonKey(name: 'message') String message)
+        ServerConfirmRequestToTurnOn,
     required TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsRegistration,
@@ -1204,6 +1891,10 @@ class _$ServerConfirmsLoginImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)
         serverConfirmsLogin,
+    required TResult Function(
+            @JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)
+        serverSendsHistory,
   }) {
     return serverConfirmsLogin(message, token, userId);
   }
@@ -1214,8 +1905,10 @@ class _$ServerConfirmsLoginImpl
     TResult? Function(
             @JsonKey(name: 'ison') bool isOn,
             @JsonKey(name: 'temperatur') double temperatur,
-            @JsonKey(name: 'TimeStamp') String timestamp)?
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)?
         serverSendsCurrentFountainstate,
+    TResult? Function(@JsonKey(name: 'message') String message)?
+        ServerConfirmRequestToTurnOn,
     TResult? Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsRegistration,
@@ -1224,6 +1917,9 @@ class _$ServerConfirmsLoginImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
+    TResult? Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
+        serverSendsHistory,
   }) {
     return serverConfirmsLogin?.call(message, token, userId);
   }
@@ -1234,8 +1930,10 @@ class _$ServerConfirmsLoginImpl
     TResult Function(
             @JsonKey(name: 'ison') bool isOn,
             @JsonKey(name: 'temperatur') double temperatur,
-            @JsonKey(name: 'TimeStamp') String timestamp)?
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)?
         serverSendsCurrentFountainstate,
+    TResult Function(@JsonKey(name: 'message') String message)?
+        ServerConfirmRequestToTurnOn,
     TResult Function(@JsonKey(name: 'Message') String message,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsRegistration,
@@ -1244,6 +1942,9 @@ class _$ServerConfirmsLoginImpl
             @JsonKey(name: 'Token') Object token,
             @JsonKey(name: 'UserId') int userId)?
         serverConfirmsLogin,
+    TResult Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
+        serverSendsHistory,
     required TResult orElse(),
   }) {
     if (serverConfirmsLogin != null) {
@@ -1257,9 +1958,12 @@ class _$ServerConfirmsLoginImpl
   TResult map<TResult extends Object?>({
     required TResult Function(ServerSendsCurrentFountainstate value)
         serverSendsCurrentFountainstate,
+    required TResult Function(ServerConfirmRequestToTurnOn value)
+        ServerConfirmRequestToTurnOn,
     required TResult Function(ServerConfirmsRegistration value)
         serverConfirmsRegistration,
     required TResult Function(ServerConfirmsLogin value) serverConfirmsLogin,
+    required TResult Function(ServerSendsHistory value) serverSendsHistory,
   }) {
     return serverConfirmsLogin(this);
   }
@@ -1269,9 +1973,12 @@ class _$ServerConfirmsLoginImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerSendsCurrentFountainstate value)?
         serverSendsCurrentFountainstate,
+    TResult? Function(ServerConfirmRequestToTurnOn value)?
+        ServerConfirmRequestToTurnOn,
     TResult? Function(ServerConfirmsRegistration value)?
         serverConfirmsRegistration,
     TResult? Function(ServerConfirmsLogin value)? serverConfirmsLogin,
+    TResult? Function(ServerSendsHistory value)? serverSendsHistory,
   }) {
     return serverConfirmsLogin?.call(this);
   }
@@ -1281,9 +1988,12 @@ class _$ServerConfirmsLoginImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerSendsCurrentFountainstate value)?
         serverSendsCurrentFountainstate,
+    TResult Function(ServerConfirmRequestToTurnOn value)?
+        ServerConfirmRequestToTurnOn,
     TResult Function(ServerConfirmsRegistration value)?
         serverConfirmsRegistration,
     TResult Function(ServerConfirmsLogin value)? serverConfirmsLogin,
+    TResult Function(ServerSendsHistory value)? serverSendsHistory,
     required TResult orElse(),
   }) {
     if (serverConfirmsLogin != null) {
@@ -1318,5 +2028,275 @@ abstract class ServerConfirmsLogin implements ServerEvent {
   int get userId;
   @JsonKey(ignore: true)
   _$$ServerConfirmsLoginImplCopyWith<_$ServerConfirmsLoginImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$ServerSendsHistoryImplCopyWith<$Res> {
+  factory _$$ServerSendsHistoryImplCopyWith(_$ServerSendsHistoryImpl value,
+          $Res Function(_$ServerSendsHistoryImpl) then) =
+      __$$ServerSendsHistoryImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+      @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings});
+}
+
+/// @nodoc
+class __$$ServerSendsHistoryImplCopyWithImpl<$Res>
+    extends _$ServerEventCopyWithImpl<$Res, _$ServerSendsHistoryImpl>
+    implements _$$ServerSendsHistoryImplCopyWith<$Res> {
+  __$$ServerSendsHistoryImplCopyWithImpl(_$ServerSendsHistoryImpl _value,
+      $Res Function(_$ServerSendsHistoryImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? tempReadings = null,
+    Object? onTimeReadings = null,
+  }) {
+    return _then(_$ServerSendsHistoryImpl(
+      tempReadings: null == tempReadings
+          ? _value._tempReadings
+          : tempReadings // ignore: cast_nullable_to_non_nullable
+              as List<Reading>,
+      onTimeReadings: null == onTimeReadings
+          ? _value._onTimeReadings
+          : onTimeReadings // ignore: cast_nullable_to_non_nullable
+              as List<Reading>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ServerSendsHistoryImpl
+    with DiagnosticableTreeMixin
+    implements ServerSendsHistory {
+  _$ServerSendsHistoryImpl(
+      {@JsonKey(name: 'tempReadings') required final List<Reading> tempReadings,
+      @JsonKey(name: 'onTimeReadings')
+      required final List<Reading> onTimeReadings,
+      final String? $type})
+      : _tempReadings = tempReadings,
+        _onTimeReadings = onTimeReadings,
+        $type = $type ?? 'ServerSendsHistory';
+
+  factory _$ServerSendsHistoryImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ServerSendsHistoryImplFromJson(json);
+
+  final List<Reading> _tempReadings;
+  @override
+  @JsonKey(name: 'tempReadings')
+  List<Reading> get tempReadings {
+    if (_tempReadings is EqualUnmodifiableListView) return _tempReadings;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tempReadings);
+  }
+
+  final List<Reading> _onTimeReadings;
+  @override
+  @JsonKey(name: 'onTimeReadings')
+  List<Reading> get onTimeReadings {
+    if (_onTimeReadings is EqualUnmodifiableListView) return _onTimeReadings;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_onTimeReadings);
+  }
+
+  @JsonKey(name: 'eventType')
+  final String $type;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'ServerEvent.serverSendsHistory(tempReadings: $tempReadings, onTimeReadings: $onTimeReadings)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'ServerEvent.serverSendsHistory'))
+      ..add(DiagnosticsProperty('tempReadings', tempReadings))
+      ..add(DiagnosticsProperty('onTimeReadings', onTimeReadings));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ServerSendsHistoryImpl &&
+            const DeepCollectionEquality()
+                .equals(other._tempReadings, _tempReadings) &&
+            const DeepCollectionEquality()
+                .equals(other._onTimeReadings, _onTimeReadings));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_tempReadings),
+      const DeepCollectionEquality().hash(_onTimeReadings));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ServerSendsHistoryImplCopyWith<_$ServerSendsHistoryImpl> get copyWith =>
+      __$$ServerSendsHistoryImplCopyWithImpl<_$ServerSendsHistoryImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)
+        serverSendsCurrentFountainstate,
+    required TResult Function(@JsonKey(name: 'message') String message)
+        ServerConfirmRequestToTurnOn,
+    required TResult Function(@JsonKey(name: 'Message') String message,
+            @JsonKey(name: 'UserId') int userId)
+        serverConfirmsRegistration,
+    required TResult Function(
+            @JsonKey(name: 'Message') String message,
+            @JsonKey(name: 'Token') Object token,
+            @JsonKey(name: 'UserId') int userId)
+        serverConfirmsLogin,
+    required TResult Function(
+            @JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)
+        serverSendsHistory,
+  }) {
+    return serverSendsHistory(tempReadings, onTimeReadings);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)?
+        serverSendsCurrentFountainstate,
+    TResult? Function(@JsonKey(name: 'message') String message)?
+        ServerConfirmRequestToTurnOn,
+    TResult? Function(@JsonKey(name: 'Message') String message,
+            @JsonKey(name: 'UserId') int userId)?
+        serverConfirmsRegistration,
+    TResult? Function(
+            @JsonKey(name: 'Message') String message,
+            @JsonKey(name: 'Token') Object token,
+            @JsonKey(name: 'UserId') int userId)?
+        serverConfirmsLogin,
+    TResult? Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
+        serverSendsHistory,
+  }) {
+    return serverSendsHistory?.call(tempReadings, onTimeReadings);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            @JsonKey(name: 'ison') bool isOn,
+            @JsonKey(name: 'temperatur') double temperatur,
+            @JsonKey(name: 'TimeStamp') DateTime timestamp)?
+        serverSendsCurrentFountainstate,
+    TResult Function(@JsonKey(name: 'message') String message)?
+        ServerConfirmRequestToTurnOn,
+    TResult Function(@JsonKey(name: 'Message') String message,
+            @JsonKey(name: 'UserId') int userId)?
+        serverConfirmsRegistration,
+    TResult Function(
+            @JsonKey(name: 'Message') String message,
+            @JsonKey(name: 'Token') Object token,
+            @JsonKey(name: 'UserId') int userId)?
+        serverConfirmsLogin,
+    TResult Function(@JsonKey(name: 'tempReadings') List<Reading> tempReadings,
+            @JsonKey(name: 'onTimeReadings') List<Reading> onTimeReadings)?
+        serverSendsHistory,
+    required TResult orElse(),
+  }) {
+    if (serverSendsHistory != null) {
+      return serverSendsHistory(tempReadings, onTimeReadings);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServerSendsCurrentFountainstate value)
+        serverSendsCurrentFountainstate,
+    required TResult Function(ServerConfirmRequestToTurnOn value)
+        ServerConfirmRequestToTurnOn,
+    required TResult Function(ServerConfirmsRegistration value)
+        serverConfirmsRegistration,
+    required TResult Function(ServerConfirmsLogin value) serverConfirmsLogin,
+    required TResult Function(ServerSendsHistory value) serverSendsHistory,
+  }) {
+    return serverSendsHistory(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServerSendsCurrentFountainstate value)?
+        serverSendsCurrentFountainstate,
+    TResult? Function(ServerConfirmRequestToTurnOn value)?
+        ServerConfirmRequestToTurnOn,
+    TResult? Function(ServerConfirmsRegistration value)?
+        serverConfirmsRegistration,
+    TResult? Function(ServerConfirmsLogin value)? serverConfirmsLogin,
+    TResult? Function(ServerSendsHistory value)? serverSendsHistory,
+  }) {
+    return serverSendsHistory?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServerSendsCurrentFountainstate value)?
+        serverSendsCurrentFountainstate,
+    TResult Function(ServerConfirmRequestToTurnOn value)?
+        ServerConfirmRequestToTurnOn,
+    TResult Function(ServerConfirmsRegistration value)?
+        serverConfirmsRegistration,
+    TResult Function(ServerConfirmsLogin value)? serverConfirmsLogin,
+    TResult Function(ServerSendsHistory value)? serverSendsHistory,
+    required TResult orElse(),
+  }) {
+    if (serverSendsHistory != null) {
+      return serverSendsHistory(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ServerSendsHistoryImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class ServerSendsHistory implements ServerEvent {
+  factory ServerSendsHistory(
+      {@JsonKey(name: 'tempReadings') required final List<Reading> tempReadings,
+      @JsonKey(name: 'onTimeReadings')
+      required final List<Reading> onTimeReadings}) = _$ServerSendsHistoryImpl;
+
+  factory ServerSendsHistory.fromJson(Map<String, dynamic> json) =
+      _$ServerSendsHistoryImpl.fromJson;
+
+  @JsonKey(name: 'tempReadings')
+  List<Reading> get tempReadings;
+  @JsonKey(name: 'onTimeReadings')
+  List<Reading> get onTimeReadings;
+  @JsonKey(ignore: true)
+  _$$ServerSendsHistoryImplCopyWith<_$ServerSendsHistoryImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

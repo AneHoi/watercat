@@ -11,7 +11,7 @@ public class DeviceReadingsService
         _waterFountainService = waterFountainService;
     }
 
-    public void CreateReadings(DeviceData deviceReadingsDto)
+    public WaterFountainstateDtoToDB CreateReadings(DeviceData deviceReadingsDto)
     {
         var deviceId = deviceReadingsDto.DeviceId;
         //TODO remove
@@ -21,17 +21,18 @@ public class DeviceReadingsService
         if (deviceReadingsDto.Data.DeviceData.Any())
         {
             Console.WriteLine("Data: " + deviceReadingsDto.Data.DeviceData.Count);
-            
-            _waterFountainService.addFountaindata(new WaterFountainstate
+            WaterFountainstateDtoToDB waterFountainstate = new WaterFountainstateDtoToDB()
             {
                 deviceId = deviceReadingsDto.DeviceId,
                 ison = deviceReadingsDto.Data.DeviceData[0].MotorValue == 1 ? true : false,
                 temperatur = deviceReadingsDto.Data.DeviceData[0].TemperatureValue,
                 TimeStamp = deviceReadingsDto.Data.DeviceData[0].TimeStamp,
-            });
+            };
+            _waterFountainService.addFountaindata(waterFountainstate);
+            return waterFountainstate;
         }
         else
-            throw new NullReferenceException("there is no humidity readings in dataset");
+            throw new NullReferenceException("There is no correct data");
     }
 
     public bool DeleteAllReadings(int deviceId)

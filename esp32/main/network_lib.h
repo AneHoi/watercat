@@ -5,8 +5,7 @@
 #include <PubSubClient.h>
 #include <WiFi.h>
 #include <Arduino.h>
-void sendDto(String topic, bool isOn, float tempC, float distanceCm);
+
 void connectWifi(const char* ssid, const char* password);
-PubSubClient connectBroker(PubSubClient client, const char* mqttServer, const int mqttPort, const char* mqttUser, const char* mqttPassword);
 
 #endif

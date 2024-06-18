@@ -1,5 +1,6 @@
 
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,32 +13,68 @@ class HomepageCubit extends Cubit<HomepageState>{
   HomepageCubit(this.channel) : super(
       HomepageState.isOffNow()
   ){
+    initializeListener();
     getWaterfountainState();
   }
   final BroadcastWsChannel channel;
+  //Subscription, that helps listen to incoming messages from backend
+  late StreamSubscription _subscription;
 
+
+  void initializeListener() {
+    _subscription = channel.stream.listen((event) {
+      final serverEvent = ServerEvent.fromJson(jsonDecode(event));
+      if (serverEvent is ServerSendsCurrentFountainstate) {
+        emit(state.copyWith(
+            isOn: serverEvent.isOn,
+            temperature: serverEvent.temperatur,
+            timestamp: serverEvent.timestamp
+        ));
+      }
+    });
+  }
+
+  turnOnWaterFountain(int minutesOn) async{
+    final event = ClientEvent.clientWantsToTurnOnFountain(
+        requestTime: minutesOn
+    );
+
+    final serverEventFuture = channel.stream
+        .map((event) => ServerEvent.fromJson(jsonDecode(event)))
+        .firstWhere((event) => event is ServerConfirmRequestToTurnOn
+    );
+    channel.sink.add(jsonEncode(event.toJson()));
+
+    final serverEvent = await serverEventFuture.timeout(Duration(seconds: 5));
+    if (serverEvent is ServerConfirmRequestToTurnOn) {
+      print(serverEvent.message);
+    }
+    else{
+      print("Incoming message could not be handled correctly");
+    }
+  }
 
 
   getWaterfountainState() async {
-    print("triggered");
     final event = ClientEvent.clientWantsCurrentFountainState(
-      email: "username",
+
     );
     final serverEventFuture = channel.stream
         .map((event) => ServerEvent.fromJson(jsonDecode(event)))
-        .firstWhere(
-          (event) => event is ServerSendsCurrentFountainstate
+        .firstWhere((event) => event is ServerSendsCurrentFountainstate
     );
     channel.sink.add(jsonEncode(event.toJson()));
 
     final serverEvent = await serverEventFuture.timeout(Duration(seconds: 5));
     if (serverEvent is ServerSendsCurrentFountainstate) {
-      emit(state.copyWith(isOn: serverEvent.isOn, temperature: serverEvent.temperatur, timestamp: serverEvent.timestamp));
-      print("response");
+      emit(state.copyWith(
+          isOn: serverEvent.isOn,
+          temperature: serverEvent.temperatur,
+          timestamp: serverEvent.timestamp
+      ));
     }
     else{
-      print("no success");
-
+      print("Incoming message could not be handled correctly");
     }
   }
 }

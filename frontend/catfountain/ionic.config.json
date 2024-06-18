@@ -1,7 +1,0 @@
-{
-  "name": "catfountain",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}

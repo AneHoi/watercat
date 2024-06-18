@@ -5,7 +5,7 @@ import 'package:watercat/screens/small_widget_helpers/screenlayout.dart';
 import '../bloc/homepagecubit.dart';
 import '../bloc/homepagestate.dart';
 import '../broardcastwschannel.dart';
-import 'small_widget_helpers/toggleswitch.dart';
+
 
 const appTitle = 'My fountain';
 bool ison = false;
@@ -38,125 +38,67 @@ class _HomeContent extends State<HomeContent> {
         create: (context) => HomepageCubit(context.read<BroadcastWsChannel>()),
         child: BlocConsumer<HomepageCubit, HomepageState>(
             listener: (context, state) {
-          ison = getcurrentstate(state);
+          ison = state.isOn;
         }, builder: (context, state) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                  constraints: BoxConstraints(maxWidth: 800),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: ison
-                            ? Color.fromARGB(143, 217, 217, 217)
-                            : Color.fromARGB(66, 0, 0, 0),
-                      ),
-                      color: ison
-                          ? Color.fromARGB(143, 217, 217, 217)
-                          : Color.fromARGB(143, 159, 154, 154),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(40))),
-                  padding: const EdgeInsets.all(20.0),
-                  margin: const EdgeInsets.all(20.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Container(),
-                              ),
-                              Container(
-                                child: Text(appTitle,
-                                    style: TextStyle(fontSize: 30)),
-                              ),
-                              Expanded(
-                                child: Container(
-                                    alignment: Alignment.centerRight,
-                                    child: IconButton(
-                                      icon: Icon(Icons.refresh_rounded),
-                                      onPressed: () async {
-                                        bool result = await context
-                                            .read<HomepageCubit>()
-                                            .getWaterfountainState();
-                                        // This is called when the user toggles the switch.
-                                        setState(() {
-                                          ison = result;
-                                        });
-                                      },
-                                    )),
-                              ),
-                            ],
-                          ),
-                          Container(
-                              constraints:
-                                  BoxConstraints(minWidth: 50, maxWidth: 300),
-                              child: Image.asset('assets/fountain.png')),
-                          Switch(
-                            // This bool value toggles the switch.
-                            value: ison,
-                            activeTrackColor:
-                                const Color.fromRGBO(89, 121, 238, 1.0),
-                            activeColor:
-                                const Color.fromRGBO(255, 255, 255, 1.0),
+          return getCenterBox(buildHomepageContent(context, state), ison);
+        }
+        )
+    );
+  }
 
-                            inactiveTrackColor:
-                                const Color.fromRGBO(255, 255, 255, 1.0),
-                            inactiveThumbColor:
-                                const Color.fromRGBO(0, 0, 0, 1.0),
-                            onChanged: (bool value) async {},
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(Icons.access_time),
-                                  Text(getStateText(state)),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(Icons.thermostat),
-                                  Text(getTempStateText(state))
-                                ],
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+  Column buildHomepageContent(BuildContext context, HomepageState state) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          child: Text(appTitle, style: TextStyle(fontSize: 30, color: ison ? Colors.black : Colors.white)),
+        ),
+        Container(
+            constraints: BoxConstraints(minWidth: 50, maxWidth: 300),
+            child: Image.asset('assets/fountain.png')),
+        Switch(
+          // This bool value toggles the switch.
+          value: ison,
+          activeTrackColor: const Color.fromRGBO(89, 121, 238, 1.0),
+          activeColor: getWhiteColor(),
+
+          inactiveTrackColor: getWhiteColor(),
+
+          inactiveThumbColor: const Color.fromRGBO(0, 0, 0, 1.0),
+          onChanged: (bool value) async {
+            await context.read<HomepageCubit>().turnOnWaterFountain(10);
+            ison = value;
+          },
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.access_time),
+                Text(getStateText(state), style: TextStyle(color: ison ? Colors.black : Colors.white),),
               ],
             ),
-          );
-        }));
+            Row(
+              children: [Icon(Icons.thermostat), Text(getTempStateText(state), style: TextStyle(color: ison ? Colors.black : Colors.white),)],
+            )
+          ],
+        )
+      ],
+    );
   }
 
   String getStateText(HomepageState state) {
     String stateText = state.isOn ? "On" : "Off";
-    if(state.timestamp.isNotEmpty){
-      String time = state.timestamp.substring(11,16);
-      stateText = stateText + " since: " + time;
+    if (state.timestamp.isAfter(DateTime.parse('1969-01-01 00:00:04Z'))) {
+      String hour = state.timestamp.hour.toString();
+      String minutes = state.timestamp.minute.toString();
+      stateText = stateText + " since: " + hour + ":" + minutes;
     }
-
     return stateText;
   }
 
   String getTempStateText(HomepageState state) {
-    return state.temperature.toString();
-  }
-
-  bool getcurrentstate(HomepageState state) {
-    print("Is water on?: ");
-    print(state.isOn);
-    print(" it has been since: " + state.timestamp);
-    return state.isOn;
+    return state.temperature.toStringAsFixed(1);
   }
 }
