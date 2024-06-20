@@ -13,5 +13,5 @@ jobs:
       - run: cd backend/test && dotnet test
         env:
           JWT_KEY: ${{secrets.JWT_KEY}}
-          pgconn: ${{secrets.pgconn}}
-          mqttToken: ${{secrets.mqttToken}}
+          pgconn: ${{secrets.PGCONN}}
+          mqttToken: ${{secrets.MQTTTOKEN}}
