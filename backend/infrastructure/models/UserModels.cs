@@ -5,12 +5,11 @@ namespace infrastructure.Models;
 
 /**
  * contains all data relevant for stateService SHOULD NOT BE SEND TO CLIENT!
- * Status for ban or not 
- * admin rights if needed
  */
 public class EndUser
 {
     public int Id { get; set; }
+    public int DeviceId { get; set; }
     public string? Email { get; set; }
     public PasswordHash? PasswordInfo;
     //todo should we have admin and ban rights??
@@ -38,25 +37,22 @@ public class ShortUserDto
 
 public class UserRegisterDto
 {
+    [Required(ErrorMessage = "DeviceId is reqired")]
+    public int deviceId { get; set; }
+    
+    [Required(ErrorMessage = "Device name is required.")]
+    public string deviceName { get; set; }
+    
     [Required(ErrorMessage = "Email is required.")]
     [EmailAddress(ErrorMessage = "Email is not valid.")]
-    public string Email { get; set; }
+    public string email { get; set; }
     
     [Required(ErrorMessage = "Password is required.")]
     [MinLength(6, ErrorMessage = "Password is required.")]
     [DataType(DataType.Password)]
-    public string Password { get; set; }
+    public string password { get; set; }
     
-    [Required(ErrorMessage = "Country code is required.")]
-    public string CountryCode { get; set; }
-
-    [Required(ErrorMessage = "Phone number is required.")]
-    [Phone(ErrorMessage = "Phone number is not valid.")]
-    public string Phone { get; set; }
-
-    [Required(ErrorMessage = "First name is required.")]
-    public string FirstName { get; set; }
-
-    [Required(ErrorMessage = "Last name is required.")]
-    public string LastName { get; set; }
+    [Required(ErrorMessage = "Name is required.")]
+    public string username { get; set; }
+    
 }

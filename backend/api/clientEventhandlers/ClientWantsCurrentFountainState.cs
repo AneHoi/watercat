@@ -1,4 +1,5 @@
-﻿using api.helpers;
+﻿using api.ClientEventFilters;
+using api.helpers;
 using api.serverEventModels;
 using Fleck;
 using infrastructure.Models;
@@ -11,6 +12,7 @@ public class ClientWantsCurrentFountainStateDto : BaseDto
 {
 }
 
+[RequireAuthentication]
 public class ClientWantsCurrentFountainState : BaseEventHandler<ClientWantsCurrentFountainStateDto>
 {
     private readonly WaterFountainService _waterFountainService;

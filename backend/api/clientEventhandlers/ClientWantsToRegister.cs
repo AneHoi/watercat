@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Authentication;
 using api.ClientEventFilters;
 using api.helpers;
 using api.serverEventModels;
@@ -8,31 +7,27 @@ using Fleck;
 using infrastructure.Models;
 using lib;
 using service.services;
-using service.services.notificationServices;
 
 namespace api.clientEventHandlers;  
 
 public class ClientWantsToRegisterDto : BaseDto
 {
+    [Required(ErrorMessage = "DeviceId is required")]
+    public int deviceId { get; set; }
+    
+    [Required(ErrorMessage = "Device name is required.")]
+    public string deviceName { get; set; }
+    
     [Required(ErrorMessage = "Email is required.")]
     [EmailAddress(ErrorMessage = "Email is not valid.")]
-    public string Email { get; set; }
-    
-    [Required(ErrorMessage = "Phone number is required.")]
-    public string Phone { get; set; }
+    public string email { get; set; }
     
     [Required(ErrorMessage = "Password is required.")]
     [MinLength(6, ErrorMessage = "Password is to short.")]
-    public string Password { get; set; }
+    public string password { get; set; }
     
-    [Required(ErrorMessage = "FirstName is required.")]
-    public string FirstName { get; set; }
-    
-    [Required(ErrorMessage = "LastName is required.")]
-    public string LastName { get; set; }
-    
-    [Required(ErrorMessage = "CountryCode is required.")]
-    public string CountryCode { get; set; }
+    [Required(ErrorMessage = "Username is required.")]
+    public string username { get; set; }
 }
 
 [ValidateDataAnnotations]
@@ -41,37 +36,27 @@ public class ClientWantsToRegister : BaseEventHandler<ClientWantsToRegisterDto>
     private readonly AuthService _authService;
 
     private readonly TokenService _tokenService;
-    private readonly NotificationService _notificationService;
     
     public ClientWantsToRegister(
         AuthService authService,
-        TokenService tokenService,
-        NotificationService notificationService)
+        TokenService tokenService
+        )
     {
         _authService = authService;
         _tokenService = tokenService;
-        _notificationService = notificationService;
+        
     }
 
     public override Task Handle(ClientWantsToRegisterDto dto, IWebSocketConnection socket)
     {
-        //check if the user already exists 
-        if (_authService.DoesUserAlreadyExist(dto.Email))
-            throw new ValidationException("User with this email already exists");
-
-        if (_authService.PhoneNumberValid(dto.Phone))
-        {
-            throw new AuthenticationException("The telephone number can only take these given characters: 1234567890");
-        }
-        //save the user and password to the db
+        //Save the user and password to the db
         EndUser user = _authService.RegisterUser(new UserRegisterDto
         {
-            Email = dto.Email,
-            Password = dto.Password,
-            CountryCode = dto.CountryCode,
-            Phone = dto.Phone,
-            FirstName = dto.FirstName,
-            LastName = dto.LastName
+            deviceId = dto.deviceId,
+            deviceName = dto.deviceName,
+            email = dto.email,
+            password = dto.password,
+            username = dto.username
         });
 
         //issue token
@@ -84,15 +69,6 @@ public class ClientWantsToRegister : BaseEventHandler<ClientWantsToRegisterDto>
         //return JWT to client 
         socket.SendDto(new ServerAuthenticatesUser { Jwt = token });
         
-        //sets noti settings and sends welcome message
-        List<MessageType> selectedMessageTypes = new List<MessageType>();
-        selectedMessageTypes.Add(MessageType.EMAIL);
-        _notificationService.SendWelcomeMessage(selectedMessageTypes, new ShortUserDto
-        {
-            Id = user.Id,
-            Email = dto.Email,
-            Name = dto.FirstName
-        });
         return Task.CompletedTask;
     }
 }

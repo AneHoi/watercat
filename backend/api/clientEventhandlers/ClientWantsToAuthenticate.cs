@@ -17,17 +17,17 @@ public class ClientWantsToSignInDto : BaseDto
     public string email { get; set; }
 
     [Required(ErrorMessage = "Password is required.")]
-    [MinLength(6, ErrorMessage = "Password is to short.")]
+    [MinLength(6, ErrorMessage = "Password is too short.")]
     public string password { get; set; }
 }
 
 [ValidateDataAnnotations]
-public class ClientWantsToAuthenticate : BaseEventHandler<ClientWantsToSignInDto>
+public class ClientWantsToLogIn : BaseEventHandler<ClientWantsToSignInDto>
 {
     private readonly AuthService _authService;
     private readonly TokenService _tokenService;
 
-    public ClientWantsToAuthenticate(
+    public ClientWantsToLogIn(
         AuthService authService,
         TokenService tokenService)
     {
@@ -37,9 +37,9 @@ public class ClientWantsToAuthenticate : BaseEventHandler<ClientWantsToSignInDto
 
     public override Task Handle(ClientWantsToSignInDto request, IWebSocketConnection socket)
     {
-        //gets user information from db and checks for ban status
+        //gets user information from db
         var user = _authService.GetUser(request.email);
-        //if (user.Isbanned) throw new AuthenticationException("User is banned");
+        
 
         //checks password hash
         bool validated = _authService.ValidateHash(request.password!, user.PasswordInfo!);

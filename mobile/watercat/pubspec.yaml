@@ -41,6 +41,7 @@ dependencies:
   intl: ^0.19.0
   build_runner: ^2.4.10
   fl_chart: ^0.68.0
+  passwordfield: ^0.2.0
 
 
 dev_dependencies:

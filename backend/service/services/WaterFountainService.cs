@@ -104,4 +104,10 @@ public class WaterFountainService
         TimeSpan onTime = firstTimestamp - secondTimestamp;
         return onTime.Seconds;
     }
+
+
+    public string getNameFromId(int deviceId)
+    {
+        return _waterfountainRepository.getFountainNameFromId(deviceId);
+    }
 }

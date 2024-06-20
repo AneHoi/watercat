@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:watercat/bloc/homepagestate.dart';
+import 'package:watercat/bloc/blochomepage/homepagestate.dart';
 import 'package:watercat/broardcastwschannel.dart';
 import 'package:watercat/models/events.dart';
 
@@ -14,6 +14,7 @@ class HomepageCubit extends Cubit<HomepageState>{
       HomepageState.isOffNow()
   ){
     initializeListener();
+    getFountainName();
     getWaterfountainState();
   }
   final BroadcastWsChannel channel;
@@ -54,7 +55,26 @@ class HomepageCubit extends Cubit<HomepageState>{
     }
   }
 
+  getFountainName() async {
+    final event = ClientEvent.clientWantsFountainName(
 
+    );
+    final serverEventFuture = channel.stream
+        .map((event) => ServerEvent.fromJson(jsonDecode(event)))
+        .firstWhere((event) => event is ServerSendsFountainName
+    );
+    channel.sink.add(jsonEncode(event.toJson()));
+
+    final serverEvent = await serverEventFuture.timeout(Duration(seconds: 5));
+    if (serverEvent is ServerSendsFountainName) {
+      emit(state.copyWith(
+        fountainName: serverEvent.fountainName
+      ));
+    }
+    else{
+      print("Incoming fountain name could not be handled correctly");
+    }
+  }
   getWaterfountainState() async {
     final event = ClientEvent.clientWantsCurrentFountainState(
 

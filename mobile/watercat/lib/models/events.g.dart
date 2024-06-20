@@ -19,7 +19,7 @@ Map<String, dynamic> _$ReadingToJson(Reading instance) => <String, dynamic>{
 _$ClientWantsToLogInImpl _$$ClientWantsToLogInImplFromJson(
         Map<String, dynamic> json) =>
     _$ClientWantsToLogInImpl(
-      username: json['username'] as String,
+      email: json['email'] as String,
       password: json['password'] as String,
       $type: json['eventType'] as String?,
     );
@@ -27,8 +27,42 @@ _$ClientWantsToLogInImpl _$$ClientWantsToLogInImplFromJson(
 Map<String, dynamic> _$$ClientWantsToLogInImplToJson(
         _$ClientWantsToLogInImpl instance) =>
     <String, dynamic>{
-      'username': instance.username,
+      'email': instance.email,
       'password': instance.password,
+      'eventType': instance.$type,
+    };
+
+_$ClientWantsToRegisterImpl _$$ClientWantsToRegisterImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ClientWantsToRegisterImpl(
+      deviceId: (json['deviceId'] as num).toInt(),
+      deviceName: json['deviceName'] as String,
+      email: json['email'] as String,
+      password: json['password'] as String,
+      username: json['username'] as String,
+      $type: json['eventType'] as String?,
+    );
+
+Map<String, dynamic> _$$ClientWantsToRegisterImplToJson(
+        _$ClientWantsToRegisterImpl instance) =>
+    <String, dynamic>{
+      'deviceId': instance.deviceId,
+      'deviceName': instance.deviceName,
+      'email': instance.email,
+      'password': instance.password,
+      'username': instance.username,
+      'eventType': instance.$type,
+    };
+
+_$ClientWantsFountainNameImpl _$$ClientWantsFountainNameImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ClientWantsFountainNameImpl(
+      $type: json['eventType'] as String?,
+    );
+
+Map<String, dynamic> _$$ClientWantsFountainNameImplToJson(
+        _$ClientWantsFountainNameImpl instance) =>
+    <String, dynamic>{
       'eventType': instance.$type,
     };
 
@@ -102,37 +136,31 @@ Map<String, dynamic> _$$ServerConfirmRequestToTurnOnImplToJson(
       'eventType': instance.$type,
     };
 
-_$ServerConfirmsRegistrationImpl _$$ServerConfirmsRegistrationImplFromJson(
+_$ServerAuthenticatesUserImpl _$$ServerAuthenticatesUserImplFromJson(
         Map<String, dynamic> json) =>
-    _$ServerConfirmsRegistrationImpl(
-      message: json['Message'] as String,
-      userId: (json['UserId'] as num).toInt(),
+    _$ServerAuthenticatesUserImpl(
+      token: json['Jwt'] as String,
       $type: json['eventType'] as String?,
     );
 
-Map<String, dynamic> _$$ServerConfirmsRegistrationImplToJson(
-        _$ServerConfirmsRegistrationImpl instance) =>
+Map<String, dynamic> _$$ServerAuthenticatesUserImplToJson(
+        _$ServerAuthenticatesUserImpl instance) =>
     <String, dynamic>{
-      'Message': instance.message,
-      'UserId': instance.userId,
+      'Jwt': instance.token,
       'eventType': instance.$type,
     };
 
-_$ServerConfirmsLoginImpl _$$ServerConfirmsLoginImplFromJson(
+_$ServerSendsFountainNameImpl _$$ServerSendsFountainNameImplFromJson(
         Map<String, dynamic> json) =>
-    _$ServerConfirmsLoginImpl(
-      message: json['Message'] as String,
-      token: json['Token'] as Object,
-      userId: (json['UserId'] as num).toInt(),
+    _$ServerSendsFountainNameImpl(
+      fountainName: json['fountainName'] as String,
       $type: json['eventType'] as String?,
     );
 
-Map<String, dynamic> _$$ServerConfirmsLoginImplToJson(
-        _$ServerConfirmsLoginImpl instance) =>
+Map<String, dynamic> _$$ServerSendsFountainNameImplToJson(
+        _$ServerSendsFountainNameImpl instance) =>
     <String, dynamic>{
-      'Message': instance.message,
-      'Token': instance.token,
-      'UserId': instance.userId,
+      'fountainName': instance.fountainName,
       'eventType': instance.$type,
     };
 

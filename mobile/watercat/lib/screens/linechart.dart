@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import 'models/events.dart';
+import '../models/events.dart';
 
 class HistoryChart extends StatelessWidget {
   const HistoryChart(

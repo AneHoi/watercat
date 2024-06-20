@@ -26,51 +26,7 @@ public class AuthService
     {
         _userRepository.TestDatabaseConnection();
     }
-    public List<Emailform> GetUsers()
-    {
-        var emails = new List<Emailform>();
-        var allmails = _userRepository.GetUsers();
-        foreach (var emailform in allmails)
-        {
-            var email = new Emailform
-            {
-                email = emailform.email
-            };
-            emails.Add(email);
-        }
-        return emails;
-    }
     
-    public bool PhoneNumberValid(string number)
-    {
-        string allowableLetters = "1234567890";
-
-        foreach(char c in number)
-        {
-            if (!allowableLetters.Contains(c.ToString()))
-                return false;
-        }
-        return true;
-    }
-    
-    /**
-     * Change the name of the user
-     */
-    public UserNameInformationDto UserWantsToChangeName(int id, string firstName, string lastName)
-    {
-        return _userRepository.changeUserName(id, firstName, lastName);
-    }
-    
-    public string UserWantsToChangePhoneNumber(int userId, string phoneNumber)
-    {
-        return _userRepository.changePhoneNumber(userId, phoneNumber);
-    }
-    
-    public string UserWantsToChangeEmail(int userId, string oldEmail, string newEmail)
-    {
-        //TODO send validation email, to the new email
-        return _userRepository.changeEmail(userId, oldEmail, newEmail);
-    }
     
     /**
      * should not be used for returning to frontend!
@@ -82,6 +38,8 @@ public class AuthService
         {
             throw new AuthenticationException("Could not log in");
         }
+
+        user.DeviceId = _userRepository.GetDeviceId(user.Id);
         user.PasswordInfo = _passwordHashRepository.GetPasswordHashById(user.Id);
         if (ReferenceEquals(user.PasswordInfo, null))
         {
@@ -97,14 +55,14 @@ public class AuthService
 
     public EndUser RegisterUser(UserRegisterDto model)
     {
-        if (DoesUserAlreadyExist(model.Email))
+        Console.WriteLine(model.email);
+        if (DoesUserAlreadyExist(model.email))
             throw new ValidationException("User Already Exists");
 
         var user = _userRepository.Create(model); //creates the user 
         if (ReferenceEquals(user, null)) throw new SqlTypeException(" Could not create user");
 
-
-        user.PasswordInfo = GeneratePasswordHash(user.Id, model.Password);
+        user.PasswordInfo = GeneratePasswordHash(user.Id, model.password);
 
         var isCreated = _passwordHashRepository.Create(user.PasswordInfo); //stores the password
 
@@ -167,11 +125,4 @@ public class AuthService
     {
         return _passwordHashRepository.TestConnection();
     }
-
-    public EndUser GetUserById(int userId)
-    {
-        return _userRepository.GetUserById(userId);
-        
-    }
-
 }

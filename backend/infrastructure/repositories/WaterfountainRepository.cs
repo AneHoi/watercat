@@ -100,4 +100,21 @@ public class WaterfountainRepository
         }
             
     }
+
+    public string getFountainNameFromId(int deviceId)
+    {
+        try
+        {
+            string query = $@"SELECT devivename FROM devices WHERE id = @deviceId;";
+            using (var conn = _dataSource.OpenConnection())
+            {
+                return conn.QueryFirstOrDefault<string>(query, new {deviceId = deviceId});
+            }
+
+        }
+        catch (Exception e)
+        {
+            throw new SqlTypeException("Failed to retrieve the water fountains name", e);
+        }
+    }
 }

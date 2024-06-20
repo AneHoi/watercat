@@ -5,7 +5,6 @@ using Npgsql;
 
 namespace infrastructure;
 
-//TODO fix to postgress
 public class PasswordHashRepository
 {
     private readonly NpgsqlDataSource _dataSource;
@@ -14,24 +13,23 @@ public class PasswordHashRepository
     {
         _dataSource = dataSource;
     }
+
     public bool Create(PasswordHash password)
     {
-        using var connection = _dataSource.OpenConnection();
-
         try
         {
-            connection.Open();
-
             string insertQuery =
                 "INSERT INTO PasswordHash (UserId, Hash, Salt, Algorithm) VALUES (@UserId, @Hash, @Salt, @Algorithm)";
 
-            connection.Execute(insertQuery,
-                new
+            using (var connection = _dataSource.OpenConnection())
+            {
+                connection.Execute(insertQuery, new
                 {
                     UserId = password.Id, Hash = password.Hash, Salt = password.Salt, Algorithm = password.Algorithm
                 });
 
-            return true;
+                return true;
+            }
         }
         catch (Exception ex)
         {
@@ -41,20 +39,20 @@ public class PasswordHashRepository
 
     public PasswordHash GetPasswordHashById(int userId)
     {
-        using var connection = _dataSource.OpenConnection();
         try
         {
-            connection.Open();
             // Define the query using joins to fetch all information related to the user
             string query = @"
             SELECT *
             FROM PasswordHash
             WHERE UserId = @UserId";
+            using (var connection = _dataSource.OpenConnection())
+            {
+                // Execute the query using Dapper and retrieve the user information
+                var pwHash = connection.QueryFirstOrDefault<PasswordHash>(query, new { UserId = userId });
 
-            // Execute the query using Dapper and retrieve the user information
-            var pwHash = connection.QueryFirstOrDefault<PasswordHash>(query, new { UserId = userId });
-
-            return pwHash;
+                return pwHash;
+            }
         }
         catch (Exception ex)
         {

@@ -11,7 +11,6 @@ using infrastructure;
 using lib;
 using Npgsql;
 using service.services;
-using service.services.notificationServices;
 
 public static class Startup
 {
@@ -24,8 +23,6 @@ public static class Startup
     public static WebApplication Start(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        builder.Services.AddSingleton<SmtpRepository>();
 
         //saves connection string
         //gets connection string to db
@@ -40,7 +37,6 @@ public static class Startup
         builder.Services.AddSingleton<WaterFountainService>();
         builder.Services.AddSingleton<AuthService>();
         builder.Services.AddSingleton<TokenService>();
-        builder.Services.AddSingleton<NotificationService>();
 
         builder.Services.AddSingleton<DeviceReadingsService>();
         builder.Services.AddSingleton<MqttClientSubscriber>();

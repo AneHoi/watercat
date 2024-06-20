@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watercat/screens/small_widget_helpers/screenlayout.dart';
 
-import '../bloc/homepagecubit.dart';
-import '../bloc/homepagestate.dart';
+import '../bloc/blochomepage/homepagecubit.dart';
+import '../bloc/blochomepage/homepagestate.dart';
 import '../broardcastwschannel.dart';
 
-
-const appTitle = 'My fountain';
 bool ison = false;
 
 class HomeScreen extends StatelessWidget {
@@ -31,7 +29,7 @@ class HomeContent extends StatefulWidget {
 
 class _HomeContent extends State<HomeContent> {
   bool ison = true;
-
+  String fountainName = "";
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -39,6 +37,7 @@ class _HomeContent extends State<HomeContent> {
         child: BlocConsumer<HomepageCubit, HomepageState>(
             listener: (context, state) {
           ison = state.isOn;
+          fountainName = state.fountainName;
         }, builder: (context, state) {
           return getCenterBox(buildHomepageContent(context, state), ison);
         }
@@ -51,7 +50,7 @@ class _HomeContent extends State<HomeContent> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          child: Text(appTitle, style: TextStyle(fontSize: 30, color: ison ? Colors.black : Colors.white)),
+          child: Text(fountainName, style: TextStyle(fontSize: 30, color: ison ? Colors.black : Colors.white)),
         ),
         Container(
             constraints: BoxConstraints(minWidth: 50, maxWidth: 300),

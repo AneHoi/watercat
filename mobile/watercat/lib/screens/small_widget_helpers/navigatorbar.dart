@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:watercat/screens/loginscreen.dart';
 
 import '../historyscreen.dart';
 import '../homescreen.dart';
@@ -17,6 +18,7 @@ var menu = <MenuItem>[
   MenuItem(
       name: "History", screen: HistoryScreen.new, icon: Icons.calendar_month),
   MenuItem(name: "User", screen: UserScreen.new, icon: Icons.person),
+  MenuItem(name: "log", screen: LoginScreen.new, icon: Icons.login)
 ];
 
 class BottomNavigationbar extends StatelessWidget {

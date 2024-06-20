@@ -23,15 +23,7 @@ var options = <Row>[
         Text(" minutes", style: textStyle),
       ]
   ),
-  const Row(
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: [
-      Text("Notifications", style: textStyle),
-      Spacer(),
-      //spaces the Text element and the Toggle as far from each other as possible
-      ToggleSwitch()
-    ],
-  ),
+
   Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -42,34 +34,11 @@ var options = <Row>[
         icon: const Icon(Icons.arrow_forward_ios),
         onPressed: () {
           //TODO
-          /*
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ChangePasswordScreen()),
-          );
-          */
+
         },
       )
     ],
   ),
-  Row(
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: [
-      const Text("Change password", style: textStyle),
-      const Spacer(),
-      //spaces the Text element and the Arrow as far from each other as possible
-      IconButton(
-        icon: const Icon(Icons.arrow_forward_ios),
-        onPressed: () {
-          //TODO
-          /*
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ChangeUserInfo()),
-          );
-          */
-        },
-      )
-    ],
-  )
 ];
 
 class SettingsScreen extends StatelessWidget {

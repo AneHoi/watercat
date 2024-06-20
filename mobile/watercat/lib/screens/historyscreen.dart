@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watercat/bloc/blochistory/historypagecubit.dart';
 import 'package:watercat/bloc/blochistory/historystate.dart';
-import 'package:watercat/lineChart.dart';
+import 'package:watercat/screens/lineChart.dart';
 
 import 'package:watercat/screens/small_widget_helpers/screenlayout.dart';
 
