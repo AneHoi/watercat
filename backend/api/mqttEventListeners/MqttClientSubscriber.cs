@@ -30,7 +30,7 @@ public class MqttClientSubscriber
         var mqttClientOptions = new MqttClientOptionsBuilder()
             .WithTcpServer("mqtt.flespi.io", 1883)
             .WithProtocolVersion(MqttProtocolVersion.V500)
-            .WithCredentials(Environment.GetEnvironmentVariable(EnvVarKeys.mqttToken.ToString()),
+            .WithCredentials(Environment.GetEnvironmentVariable(EnvVarKeys.HD_mqttToken.ToString()),
                 "")
             .Build();
 
@@ -75,7 +75,7 @@ public class MqttClientSubscriber
         var mqttClientOptions2 = new MqttClientOptionsBuilder()
             .WithTcpServer("mqtt.flespi.io", 1883)
             .WithProtocolVersion(MqttProtocolVersion.V500)
-            .WithCredentials(Environment.GetEnvironmentVariable(EnvVarKeys.mqttToken.ToString()),
+            .WithCredentials(Environment.GetEnvironmentVariable(EnvVarKeys.HD_mqttToken.ToString()),
                 "")
             .Build();
 
@@ -129,7 +129,7 @@ public class MqttClientSubscriber
         var mqttClientOptions = new MqttClientOptionsBuilder()
             .WithTcpServer("mqtt.flespi.io", 1883)
             .WithProtocolVersion(MqttProtocolVersion.V500)
-            .WithCredentials(Environment.GetEnvironmentVariable(EnvVarKeys.mqttToken.ToString()), "")
+            .WithCredentials(Environment.GetEnvironmentVariable(EnvVarKeys.HD_mqttToken.ToString()), "")
             .Build();
 
         await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);

@@ -10,7 +10,7 @@ public class EnvironmentSetup
  */
 public enum EnvVarKeys
 {
-    JWT_KEY,
-    pgconn,
-    mqttToken
+    HD_JWT_KEY,
+    HD_pgconn,
+    HD_mqttToken
 }

@@ -25,11 +25,10 @@ public class TokenService
                 { "userId", userId }
             };
 
-            return encoder.Encode(payload, Environment.GetEnvironmentVariable(EnvVarKeys.JWT_KEY.ToString()));
+            return encoder.Encode(payload, Environment.GetEnvironmentVariable(EnvVarKeys.HD_JWT_KEY.ToString()));
         }
         catch (Exception e)
         {
-            //todo should be Logged and caught in a global exception handler. 
             throw new InvalidOperationException("User authentication succeeded, but could not create token");
         }
     }
@@ -43,14 +42,13 @@ public class TokenService
             IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
             IJwtValidator validator = new JwtValidator(serializer, provider);
             IJwtDecoder decoder = new JwtDecoder(serializer, validator, urlEncoder, new HMACSHA512Algorithm());
-            var json = decoder.Decode(jwt, Environment.GetEnvironmentVariable(EnvVarKeys.JWT_KEY.ToString()));
+            var json = decoder.Decode(jwt, Environment.GetEnvironmentVariable(EnvVarKeys.HD_JWT_KEY.ToString()));
 
             return JsonConvert.DeserializeObject<Dictionary<string, string>>(json)!;
             
         }
         catch (Exception e)
         {
-            //todo should be Logged and caught in a global exception handler. 
             throw new AuthenticationException("Authentication failed.");
         }
     }

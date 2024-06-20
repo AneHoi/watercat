@@ -3,7 +3,7 @@
 namespace infrastructure;
 public class Utilities
 {
-    private static readonly Uri Uri = new Uri(Environment.GetEnvironmentVariable(EnvVarKeys.pgconn.ToString())!);
+    private static readonly Uri Uri = new Uri(Environment.GetEnvironmentVariable(EnvVarKeys.HD_pgconn.ToString())!);
 
     public static readonly string
         ProperlyFormattedConnectionString = string.Format(
