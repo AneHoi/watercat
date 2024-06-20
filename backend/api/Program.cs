@@ -5,11 +5,9 @@ using api.helpers;
 using api.mqttEventListeners;
 using api.serverEventModels;
 using api.WebSocket;
-using Dapper;
 using Fleck;
 using infrastructure;
 using lib;
-using Npgsql;
 using service.services;
 
 public static class Startup
@@ -85,9 +83,6 @@ public static class Startup
             };
         });
         app.Services.GetService<MqttClientSubscriber>()?.CommunicateWithBroker();
-        //TODO change to a test
-        var str = app.Services.GetService<NpgsqlDataSource>().OpenConnection().QueryFirst<string>("select 'hello world'");
-        Console.WriteLine(str);
         return app;
     }
 }
